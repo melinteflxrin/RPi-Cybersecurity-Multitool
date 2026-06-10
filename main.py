@@ -3,6 +3,8 @@
 Attack Suite - Main Menu Interface
 
 A menu-driven application for BLE, Bluetooth, and WiFi attacks and security research tools.
+
+ATTRIBUTION: inspired by concepts from Jammy (https://github.com/FLOCK4H/Jammy)
 """
 
 import os

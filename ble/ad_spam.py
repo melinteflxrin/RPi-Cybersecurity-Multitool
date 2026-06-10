@@ -9,6 +9,10 @@ that trigger notifications on nearby iOS and macOS devices.
 
 WARNING: This is for educational purposes only. Use responsibly and only on devices
 you own or have permission to test.
+
+ATTRIBUTION: attack implementation inspired by:
+- RapierXbox (https://github.com/RapierXbox)
+- Jammy (https://github.com/FLOCK4H/Jammy)
 """
 
 from ui import RED, GREEN, BLUE, CYAN, WHITE, YELLOW, RESET, BRIGHT

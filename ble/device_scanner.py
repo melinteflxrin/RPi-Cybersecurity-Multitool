@@ -7,6 +7,9 @@ and displays real-time information in a "Wall of Sheep" style table.
 Uses the bleak library for proper BLE protocol support.
 Features: Device names, RSSI, TX Power, distance estimation, company identification,
 first seen/last seen timestamps, and persistent device tracking.
+
+ATTRIBUTION: inspired by Bluetooth-WOS 
+(https://github.com/skittleson/bluetooth-wos)
 """
 
 import asyncio

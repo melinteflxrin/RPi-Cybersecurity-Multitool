@@ -5,6 +5,10 @@ This module provides functions to control Bluetooth devices and handle
 BLE (Bluetooth Low Energy) advertising on Linux systems.
 
 Requires: PyBluez library
+
+ATTRIBUTION: Bluetooth utility patterns inspired by:
+- iBeacon-Scanner- (https://github.com/switchdoclabs/iBeacon-Scanner-/blob/master/blescan.py)
+- Bluez sources (http://www.bluez.org/)
 """
 
 import struct
