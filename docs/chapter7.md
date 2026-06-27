@@ -111,3 +111,4 @@ This platform demonstrates that meaningful cybersecurity education doesn't requi
 - **Understand both attack and defense:** Each attack has corresponding defenses documented in Chapter 2, teaching students to think from both perspectives
 
 The platform is ready for deployment in university labs, training programs, and self-directed learning. The complete source code, setup instructions, and this documentation provide everything needed to start teaching practical cybersecurity with transparent, affordable tools.
+
