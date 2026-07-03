@@ -1,42 +1,30 @@
 """
 ESSID Bruteforce - Hidden Network Discovery Tool
 
-This module discovers hidden WiFi networks by probing for common SSIDs
-and listening for responses from target access points.
+This module discovers hidden WiFi networks by sending directed 802.11 probe
+requests to a target AP and listening for probe responses.
 """
 
-import subprocess
 import os
 import time
-from ui import (cprint, iprint, wprint, eprint, sprint, cinput, 
-                   RED, GREEN, CYAN, YELLOW, MAGENTA, WHITE, 
+import subprocess
+from ui import (cprint, iprint, wprint, eprint, sprint, cinput,
+                   RED, GREEN, CYAN, YELLOW, MAGENTA, WHITE,
                    RESET, LIGHT_CYAN, clear)
 
 
 class ESSIDBruteforcer:
     """
-    Discovers hidden WiFi networks by probing for SSID names
-    and detecting responses from access points.
+    Discovers hidden WiFi networks by sending directed 802.11 probe requests
+    to a target BSSID and capturing probe responses.
     """
-    
+
     def __init__(self, interface):
-        """
-        Initialize the ESSID bruteforcer.
-        
-        Args:
-            interface (str): WiFi interface in monitor mode (e.g., "wlan1mon")
-        """
         self.interface = interface
-        self.process = None
         self.found_ssids = []
-    
+        self._stop_event = False
+
     def verify_monitor_mode(self):
-        """
-        Verify that the interface is in monitor mode.
-        
-        Returns:
-            bool: True if interface is in monitor mode, False otherwise
-        """
         try:
             result = subprocess.run(
                 ["iwconfig", self.interface],
@@ -48,152 +36,264 @@ class ESSIDBruteforcer:
         except Exception as e:
             eprint(f"Error checking monitor mode: {e}")
             return False
-    
+
     def get_wordlist_path(self):
-        """
-        Get the path to the common SSIDs wordlist.
-        
-        Returns:
-            str: Path to wordlist file or None if not found
-        """
         script_dir = os.path.dirname(os.path.abspath(__file__))
         wordlist_path = os.path.join(script_dir, "common_ssids.txt")
-        
-        if os.path.exists(wordlist_path):
-            return wordlist_path
-        return None
-    
-    def bruteforce_with_wordlist(self, bssid, wordlist_path):
-        """
-        Bruteforce hidden SSIDs using a wordlist.
-        
-        Args:
-            bssid (str): Target router MAC address
-            wordlist_path (str): Path to wordlist file containing SSIDs
-        """
+        return wordlist_path if os.path.exists(wordlist_path) else None
+
+    def _load_scapy(self):
+        """Lazy-import scapy and return the needed symbols, or None on failure."""
         try:
-            if not os.path.exists(wordlist_path):
-                eprint(f"Wordlist not found: {wordlist_path}")
-                return
-            
-            # Count SSIDs in wordlist
-            with open(wordlist_path, 'r') as f:
-                ssid_count = sum(1 for _ in f)
-            
-            iprint(f"Targeting router: {bssid}")
-            iprint(f"Wordlist SSIDs: {ssid_count}")
-            iprint("Starting ESSID bruteforce (Ctrl+C to stop)\n")
-            time.sleep(1)
-            
-            # Run mdk4 with wordlist probing
-            cmd = f"mdk4 {self.interface} p -t {bssid} -f {wordlist_path} -s 100"
-            
-            self.process = subprocess.Popen(
-                cmd,
-                shell=True,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-                text=True,
-                bufsize=1
+            from scapy.all import RadioTap, Dot11, Dot11Elt, Dot11ProbeResp, sendp, sniff, RandMAC
+            return RadioTap, Dot11, Dot11Elt, Dot11ProbeResp, sendp, sniff, RandMAC
+        except ImportError:
+            eprint("scapy not installed. Run: pip install scapy")
+            return None
+
+    def _build_probe(self, RadioTap, Dot11, Dot11Elt, RandMAC, bssid, ssid):
+        """Build a directed 802.11 probe request frame."""
+        return (
+            RadioTap() /
+            Dot11(
+                type=0, subtype=4,          # management / probe request
+                addr1=bssid,                # unicast destination: target AP
+                addr2=str(RandMAC()),       # our (randomised) station MAC
+                addr3=bssid                 # BSSID field
+            ) /
+            Dot11Elt(ID='SSID', info=ssid) /
+            Dot11Elt(ID='Rates', info=b'\x82\x84\x8b\x96\x24\x30\x48\x6c')
+        )
+
+    def _set_channel(self, channel):
+        """Lock the monitor interface to a specific channel."""
+        try:
+            result = subprocess.run(
+                ["sudo", "iw", "dev", self.interface, "set", "channel", str(channel)],
+                capture_output=True, text=True, timeout=5
             )
-            
-            # Monitor output
-            while self.process:
-                try:
-                    output = self.process.stdout.readline()
-                    if output and "Job's done" not in output:
-                        cprint(output.rstrip(), CYAN)
-                    
-                    if self.process.poll() is not None:
-                        break
-                except KeyboardInterrupt:
-                    self.stop_bruteforce()
-                    break
-            
-            sprint("Bruteforce completed!")
-            
-        except FileNotFoundError:
-            eprint("mdk4 not found. Install aircrack-ng: sudo apt-get install aircrack-ng")
-        except Exception as e:
-            eprint(f"Error during bruteforce: {e}")
-        finally:
-            if self.process:
-                try:
-                    self.process.terminate()
-                    self.process.wait(timeout=2)
-                except:
-                    self.process.kill()
-    
-    def bruteforce_with_custom(self, bssid, ssid_list):
-        """
-        Bruteforce using custom list of SSIDs.
-        
-        Args:
-            bssid (str): Target router MAC address
-            ssid_list (list): List of SSIDs to probe
-        """
-        try:
-            iprint(f"Targeting router: {bssid}")
-            iprint(f"Testing {len(ssid_list)} SSIDs")
-            iprint("Starting ESSID bruteforce (Ctrl+C to stop)\n")
-            time.sleep(1)
-            
-            found = []
-            for idx, ssid in enumerate(ssid_list, 1):
-                try:
-                    # Use mdk4 to probe for each SSID
-                    cmd = f"mdk4 {self.interface} p -t {bssid} -e {ssid} -s 50"
-                    
-                    result = subprocess.run(
-                        cmd,
-                        shell=True,
-                        capture_output=True,
-                        text=True,
-                        timeout=3
-                    )
-                    
-                    # Check if response received (mdk4 output indicates found)
-                    if result.stdout or result.returncode == 0:
-                        cprint(f"Found: {ssid}", GREEN)
-                        found.append(ssid)
-                    else:
-                        cprint(f"Probing: {ssid}", CYAN)
-                    
-                    # Progress indicator
-                    if idx % 5 == 0:
-                        iprint(f"Progress: {idx}/{len(ssid_list)}")
-                
-                except KeyboardInterrupt:
-                    wprint("\nBruteforce stopped by user")
-                    break
-                except subprocess.TimeoutExpired:
-                    pass
-                except Exception as e:
-                    pass
-            
-            # Print results
-            print()
-            if found:
-                sprint(f"Found {len(found)} hidden ESSID(s):")
-                for ssid in found:
-                    cprint(f"  • {ssid}", GREEN)
+            if result.returncode == 0:
+                iprint(f"Locked to channel {channel}")
+                return True
             else:
-                wprint("No hidden ESSIDs found")
-            
+                wprint(f"Could not set channel: {result.stderr.strip()}")
+                return False
         except Exception as e:
-            eprint(f"Error during bruteforce: {e}")
-    
-    def stop_bruteforce(self):
-        """Terminate the bruteforce process."""
-        if self.process:
+            wprint(f"Could not set channel: {e}")
+            return False
+
+    def _run_probe_loop(self, bssid, ssids, scapy_symbols):
+        """
+        Core bruteforce logic shared by wordlist and custom modes.
+        AsyncSniffer is started once before the probe loop so it is already
+        capturing when the router's probe response arrives (typically <2ms after
+        the probe request). Returns the discovered SSID string, or None.
+        """
+        RadioTap, Dot11, Dot11Elt, Dot11ProbeResp, sendp, sniff, RandMAC = scapy_symbols
+
+        try:
+            from scapy.all import AsyncSniffer
+        except ImportError:
+            eprint("AsyncSniffer not available. Upgrade scapy: pip install --upgrade scapy")
+            return None
+
+        bssid_lower = bssid.lower()
+        total = len(ssids)
+        self._stop_event = False
+
+        def is_response(p):
+            return (
+                p.haslayer(Dot11) and
+                p[Dot11].type == 0 and p[Dot11].subtype == 5 and
+                p[Dot11].addr2 is not None and
+                p[Dot11].addr2.lower() == bssid_lower
+            )
+
+        # Use a callback list — AsyncSniffer.results is only set after stop(),
+        # so we collect responses via prn into our own list instead.
+        captured = []
+
+        def on_response(p):
+            if is_response(p):
+                captured.append(p)
+
+        sniffer = AsyncSniffer(iface=self.interface, prn=on_response, store=False)
+        sniffer.start()
+        time.sleep(0.2)  # let the sniffer open its socket before first probe
+
+        result = None
+        for idx, ssid in enumerate(ssids, 1):
+            if self._stop_event:
+                break
             try:
-                self.process.terminate()
-                self.process.wait(timeout=2)
-            except:
-                self.process.kill()
-    
+                pkt = self._build_probe(RadioTap, Dot11, Dot11Elt, RandMAC, bssid, ssid)
+                sendp(pkt, iface=self.interface, verbose=False)
+                cprint(f"[{idx}/{total}] Probing: {ssid}", CYAN)
+                time.sleep(0.3)
+
+                if captured:
+                    elt = captured[0].getlayer(Dot11Elt)
+                    while elt:
+                        if elt.ID == 0 and elt.info:
+                            name = elt.info.decode('utf-8', errors='ignore').strip()
+                            if name:
+                                result = name
+                                sprint(f"\nFound hidden SSID: {name}")
+                            break
+                        elt = elt.payload.getlayer(Dot11Elt) if elt.payload else None
+                    if result:
+                        break
+
+            except KeyboardInterrupt:
+                wprint("\nBruteforce stopped by user")
+                break
+
+        try:
+            sniffer.stop()
+        except Exception:
+            pass
+
+        return result
+
+    def bruteforce_with_wordlist(self, bssid, wordlist_path):
+        syms = self._load_scapy()
+        if not syms:
+            return
+
+        if not os.path.exists(wordlist_path):
+            eprint(f"Wordlist not found: {wordlist_path}")
+            return
+
+        with open(wordlist_path, 'r') as f:
+            ssids = [line.strip() for line in f if line.strip()]
+
+        iprint(f"Targeting router: {bssid}")
+        iprint(f"Wordlist SSIDs: {len(ssids)}")
+        iprint("Sending directed probe requests (Ctrl+C to stop)\n")
+        time.sleep(1)
+
+        result = self._run_probe_loop(bssid, ssids, syms)
+
+        print()
+        if result:
+            sprint(f"Hidden SSID discovered: {result}")
+        else:
+            wprint("Hidden SSID not found in wordlist")
+
+    def bruteforce_with_custom(self, bssid, ssid_list):
+        syms = self._load_scapy()
+        if not syms:
+            return
+
+        iprint(f"Targeting router: {bssid}")
+        iprint(f"Testing {len(ssid_list)} SSIDs")
+        iprint("Sending directed probe requests (Ctrl+C to stop)\n")
+        time.sleep(1)
+
+        result = self._run_probe_loop(bssid, ssid_list, syms)
+
+        print()
+        if result:
+            sprint(f"Hidden SSID discovered: {result}")
+        else:
+            wprint("No hidden SSID found")
+
+    def stop_bruteforce(self):
+        self._stop_event = True
+
+    def passive_discovery(self, bssid):
+        """
+        Discover hidden SSID by capturing probe requests sent by a connected
+        client after being deauthed. The client's reconnect probes contain
+        the hidden SSID in plaintext.
+        """
+        syms = self._load_scapy()
+        if not syms:
+            return
+        RadioTap, Dot11, Dot11Elt, Dot11ProbeResp, sendp, sniff, RandMAC = syms
+
+        try:
+            from scapy.all import Dot11Deauth
+        except ImportError:
+            eprint("Could not import Dot11Deauth from scapy")
+            return
+
+        iprint("Passive Mode: capture hidden SSID from client probe requests")
+        iprint("Find the client MAC in your scanner (option 3 in main menu)\n")
+
+        client_mac = cinput("Client MAC to deauth (empty = sniff only)", LIGHT_CYAN)
+
+        if client_mac:
+            iprint(f"Sending deauth bursts to {client_mac}...")
+            deauth_ap_to_client = (
+                RadioTap() /
+                Dot11(type=0, subtype=12,
+                      addr1=client_mac,
+                      addr2=bssid,
+                      addr3=bssid) /
+                Dot11Deauth(reason=7)
+            )
+            deauth_client_to_ap = (
+                RadioTap() /
+                Dot11(type=0, subtype=12,
+                      addr1=bssid,
+                      addr2=client_mac,
+                      addr3=bssid) /
+                Dot11Deauth(reason=7)
+            )
+            for _ in range(10):
+                sendp(deauth_ap_to_client, iface=self.interface, verbose=False)
+                sendp(deauth_client_to_ap, iface=self.interface, verbose=False)
+                time.sleep(0.1)
+            iprint("Deauth sent. Listening for client probe requests...\n")
+        else:
+            iprint("Listening for probe requests directed at target AP...\n")
+
+        found = set()
+        client_lower = client_mac.lower() if client_mac else None
+
+        def on_packet(pkt):
+            if not pkt.haslayer(Dot11):
+                return
+            frame = pkt[Dot11]
+            # Probe request = type 0, subtype 4
+            if not (frame.type == 0 and frame.subtype == 4):
+                return
+            src = frame.addr2
+            if not src:
+                return
+            # Filter by client MAC if provided, otherwise any probe to our BSSID
+            if client_lower:
+                if src.lower() != client_lower:
+                    return
+            else:
+                dst = frame.addr1
+                if not dst or dst.lower() != bssid.lower():
+                    return
+            # Extract SSID (element ID 0)
+            elt = pkt.getlayer(Dot11Elt)
+            while elt:
+                if elt.ID == 0 and elt.info:
+                    ssid = elt.info.decode('utf-8', errors='ignore').strip()
+                    if ssid and ssid not in found:
+                        found.add(ssid)
+                        sprint(f"Captured probe → SSID: {ssid}  (from {src})")
+                    return
+                elt = elt.payload.getlayer(Dot11Elt) if elt.payload else None
+
+        iprint("Sniffing for 30 seconds (Ctrl+C to stop early)...")
+        try:
+            sniff(iface=self.interface, prn=on_packet, store=False, timeout=30)
+        except KeyboardInterrupt:
+            pass
+
+        print()
+        if found:
+            sprint(f"Hidden SSID(s) discovered: {', '.join(found)}")
+        else:
+            wprint("No probe requests captured — try deauthing the client again")
+
     def display_mode_menu(self):
-        """Display bruteforce mode selection."""
         print()
         cprint("╔════════════════════════════════════════════════════════╗", CYAN)
         cprint("║            SELECT BRUTEFORCE MODE                      ║", CYAN)
@@ -205,12 +305,14 @@ class ESSIDBruteforcer:
         cprint("║  2) Custom SSIDs                                       ║", LIGHT_CYAN)
         cprint("║     Manually enter SSIDs to probe                      ║", WHITE)
         cprint("║                                                        ║", CYAN)
+        cprint("║  3) Passive Mode                                       ║", LIGHT_CYAN)
+        cprint("║     Deauth a client and capture its probe requests     ║", WHITE)
+        cprint("║                                                        ║", CYAN)
         cprint("║  0) Cancel                                             ║", YELLOW)
         cprint("║                                                        ║", CYAN)
         cprint("╚════════════════════════════════════════════════════════╝", CYAN)
-    
+
     def run_interactive(self):
-        """Interactive ESSID bruteforce menu."""
         while True:
             clear()
             cprint("╔════════════════════════════════════════════════════════╗", MAGENTA)
@@ -221,14 +323,20 @@ class ESSIDBruteforcer:
             cprint(f"Monitor Mode: ", LIGHT_CYAN, end='')
             sprint("Verified" if self.verify_monitor_mode() else "Not detected")
             print()
-            
+
             bssid = cinput("Enter target router MAC (BSSID)", LIGHT_CYAN)
             if not bssid:
                 break
-            
+
+            channel = cinput("Enter router channel (e.g. 1, 6, 11)", LIGHT_CYAN)
+            if channel.isdigit():
+                self._set_channel(int(channel))
+            else:
+                wprint("Invalid channel, skipping channel lock (may affect results)")
+
             self.display_mode_menu()
             choice = cinput("Select mode", LIGHT_CYAN)
-            
+
             if choice == "0":
                 break
             elif choice == "1":
@@ -247,15 +355,18 @@ class ESSIDBruteforcer:
                     if not ssid:
                         break
                     ssid_list.append(ssid)
-                
+
                 if ssid_list:
                     clear()
                     self.bruteforce_with_custom(bssid, ssid_list)
                 else:
                     wprint("No SSIDs entered")
+            elif choice == "3":
+                clear()
+                self.passive_discovery(bssid)
             else:
                 wprint(f"Invalid option: {choice}")
                 time.sleep(1)
-            
-            if choice in ["1", "2"]:
+
+            if choice in ["1", "2", "3"]:
                 input(f"\n{CYAN}Press Enter to continue...{RESET}")

@@ -1,4 +1,4 @@
-"""WiFi attack module - Network spoofing, flooding, scanning, disruption, discovery attacks, packet capture, HTTP DoS, and PMKID extraction."""
+"""WiFi attack module - Network spoofing, flooding, scanning, disruption, discovery attacks, packet capture, and HTTP DoS."""
 
 from .beacon_broadcast import BeaconBroadcaster
 from .ap_network_flood import APNetworkFlooder
@@ -7,6 +7,5 @@ from .deauth_attack import DeauthAttack
 from .essid_bruteforce import ESSIDBruteforcer
 from .packet_capture import PacketCapture
 from .http_dos import HTTPDOSAttack
-from .pmkid_scanner import PMKIDScanner
 
-__all__ = ['BeaconBroadcaster', 'APNetworkFlooder', 'NetworkScanner', 'DeauthAttack', 'ESSIDBruteforcer', 'PacketCapture', 'HTTPDOSAttack', 'PMKIDScanner']
+__all__ = ['BeaconBroadcaster', 'APNetworkFlooder', 'NetworkScanner', 'DeauthAttack', 'ESSIDBruteforcer', 'PacketCapture', 'HTTPDOSAttack']

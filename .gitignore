@@ -220,3 +220,5 @@ __marimo__/
 wifi/captures/*
 !wifi/captures/.gitkeep
 
+learn/
+docs/

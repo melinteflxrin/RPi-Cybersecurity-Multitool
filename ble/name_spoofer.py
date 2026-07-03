@@ -23,11 +23,9 @@ Features:
 """
 
 import os
-import sys
 import time
 import random
 import subprocess
-import signal
 from typing import List, Optional
 
 
@@ -102,16 +100,6 @@ class NameSpoofAttack:
         self.device_names = custom_names if custom_names else SPOOFED_DEVICE_NAMES
         self.running = False
         self.name_change_count = 0
-        
-        # Register signal handlers for clean shutdown
-        signal.signal(signal.SIGINT, self._signal_handler)
-        signal.signal(signal.SIGTERM, self._signal_handler)
-    
-    def _signal_handler(self, signum, frame):
-        """Handle interrupt signals gracefully."""
-        print(f"\n\n[!] Attack stopped. Changed names {self.name_change_count} times.")
-        self.stop()
-        sys.exit(0)
     
     def _enable_le_advertising(self, hci_index: int) -> bool:
         """
