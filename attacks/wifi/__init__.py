@@ -1,5 +1,3 @@
-"""WiFi attack module - Network spoofing, flooding, scanning, disruption, discovery attacks, packet capture, and HTTP DoS."""
-
 from .beacon_broadcast import BeaconBroadcaster
 from .ap_network_flood import APNetworkFlooder
 from .network_scanner import NetworkScanner

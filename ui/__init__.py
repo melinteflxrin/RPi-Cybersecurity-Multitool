@@ -1,5 +1,3 @@
-"""UI module - console utilities and styling."""
-
 from .console import (
     # Colors
     BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE,
