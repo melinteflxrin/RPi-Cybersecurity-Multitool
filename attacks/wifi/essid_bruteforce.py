@@ -39,7 +39,7 @@ class ESSIDBruteforcer:
 
     def get_wordlist_path(self):
         script_dir = os.path.dirname(os.path.abspath(__file__))
-        wordlist_path = os.path.join(script_dir, "common_ssids.txt")
+        wordlist_path = os.path.join(script_dir, "data", "common_ssids.txt")
         return wordlist_path if os.path.exists(wordlist_path) else None
 
     def _load_scapy(self):

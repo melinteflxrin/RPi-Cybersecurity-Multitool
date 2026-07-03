@@ -46,7 +46,7 @@ class BLEDeviceScanner:
         company_ids = {}
         
         # Try to load from company_identifiers.yaml file
-        file_path = os.path.join(os.path.dirname(__file__), "company_identifiers.yaml")
+        file_path = os.path.join(os.path.dirname(__file__), "data", "company_identifiers.yaml")
         
         if os.path.exists(file_path):
             try:

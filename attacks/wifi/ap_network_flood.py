@@ -27,9 +27,9 @@ class APNetworkFlooder:
             interface (str): WiFi interface name (e.g., wlan1, wlan1mon)
         """
         self.interface = interface
-        # Default list file in wifi/ directory
+        # Default list file in wifi/data/ directory
         script_dir = os.path.dirname(os.path.abspath(__file__))
-        self.default_list_file = os.path.join(script_dir, "ap_networks.txt")
+        self.default_list_file = os.path.join(script_dir, "data", "ap_networks.txt")
     
     def verify_monitor_mode(self):
         """Verify interface is in monitor mode."""
