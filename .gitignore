@@ -223,5 +223,7 @@ __marimo__/
 wifi/captures/*
 !wifi/captures/.gitkeep
 
-docs/
+docs/*
+!docs/thesis.pdf
+
 learn/
