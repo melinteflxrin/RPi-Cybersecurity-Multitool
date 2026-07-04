@@ -13,7 +13,7 @@ Features:
 
 import os
 import subprocess
-from ui import cprint, iprint, wprint, eprint, sprint, cinput, CYAN, YELLOW, RED, GREEN, RESET, BRIGHT
+from ui import cprint, iprint, wprint, eprint, sprint, cinput, CYAN, YELLOW, RED, GREEN
 
 
 class BeaconBroadcaster:
@@ -59,7 +59,6 @@ class BeaconBroadcaster:
         try:
             cmd = f"sudo mdk4 {self.interface} b -n '{ssid_name}'"
             subprocess.run(cmd, shell=True)
-            sprint("Broadcast completed!")
             return True
         except KeyboardInterrupt:
             wprint("Broadcast stopped by user")
@@ -80,10 +79,9 @@ class BeaconBroadcaster:
         try:
             cmd = f"sudo mdk4 {self.interface} b -a"
             subprocess.run(cmd, shell=True)
-            sprint("Fuzzing broadcast completed!")
             return True
         except KeyboardInterrupt:
-            wprint("Fuzzing broadcast stopped by user")
+            wprint("Broadcast stopped by user")
             return False
         except Exception as e:
             eprint(f"Error during fuzzing: {e}")
@@ -101,24 +99,16 @@ class BeaconBroadcaster:
         try:
             cmd = f"sudo mdk4 {self.interface} b"
             subprocess.run(cmd, shell=True)
-            sprint("Random broadcast completed!")
             return True
         except KeyboardInterrupt:
-            wprint("Random broadcast stopped by user")
+            wprint("Broadcast stopped by user")
             return False
         except Exception as e:
-            eprint(f"Error during random broadcast: {e}")
+            eprint(f"Error during broadcast: {e}")
             return False
     
     def run_interactive(self):
         """Run beacon broadcaster in interactive mode."""
-        print(f"\n{BRIGHT}{CYAN}")
-        print("╔════════════════════════════════════════╗")
-        print("║     Beacon Broadcast Attack            ║")
-        print("║   (WiFi Network Spoofing)              ║")
-        print("╚════════════════════════════════════════╝")
-        print(f"{RESET}\n")
-        
         cprint("Attack Options:", CYAN)
         cprint("1) Broadcast with custom network name")
         cprint("2) Broadcast with beacon frame fuzzing")

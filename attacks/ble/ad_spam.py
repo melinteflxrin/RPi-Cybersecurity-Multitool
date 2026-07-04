@@ -89,9 +89,7 @@ def ad_spam(device_ids, duration=60, interval=0.1):
         duration (int): Runtime in seconds
         interval (float): Packet interval in seconds
     """
-    
-    print(f"{GREEN}{BRIGHT}Sour Apple Attack Initiated...{RESET}{BLUE}")
-    
+        
     socks = []
     
     try:
@@ -109,10 +107,8 @@ def ad_spam(device_ids, duration=60, interval=0.1):
             print(f"{RED}No Bluetooth devices available!{RESET}")
             return
         
-        print(f"{GREEN}Hold on tight, we are flying far away!{RESET}")
         print(f"{CYAN}Broadcasting Apple device advertisements...{RESET}")
         print(f"{YELLOW}Duration: {duration} seconds, Interval: {interval} seconds{RESET}")
-        print(f"{YELLOW}TIP: For better results, keep interval at 0.1-0.5 seconds{RESET}\n")
         
         tick = time.time()
         pkt_count = 0
@@ -151,7 +147,6 @@ def ad_spam(device_ids, duration=60, interval=0.1):
             except:
                 pass
         
-        print(f"{BLUE}Cleaned up resources.{RESET}")
 
 
 if __name__ == "__main__":

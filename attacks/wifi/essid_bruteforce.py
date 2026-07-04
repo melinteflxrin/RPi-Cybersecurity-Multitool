@@ -145,7 +145,7 @@ class ESSIDBruteforcer:
                         break
 
             except KeyboardInterrupt:
-                wprint("\nBruteforce stopped by user")
+                wprint("\nAttack stopped by user")
                 break
 
         try:

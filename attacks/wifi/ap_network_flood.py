@@ -13,7 +13,7 @@ Features:
 
 import os
 import subprocess
-from ui import cprint, iprint, wprint, eprint, sprint, cinput, CYAN, YELLOW, RED, GREEN, RESET, BRIGHT
+from ui import cprint, iprint, wprint, eprint, sprint, cinput, CYAN, YELLOW, RED, GREEN
 
 
 class APNetworkFlooder:
@@ -85,7 +85,6 @@ class APNetworkFlooder:
         try:
             cmd = f"sudo mdk4 {self.interface} b -f '{filepath}' -m"
             subprocess.run(cmd, shell=True)
-            sprint("Network flood completed!")
             return True
         except KeyboardInterrupt:
             wprint("Network flood stopped by user")
@@ -122,13 +121,6 @@ class APNetworkFlooder:
     
     def run_interactive(self):
         """Run AP network flooder in interactive mode."""
-        print(f"\n{BRIGHT}{CYAN}")
-        print("╔════════════════════════════════════════╗")
-        print("║     AP Network Flood Attack            ║")
-        print("║   (Mass WiFi Broadcasting)             ║")
-        print("╚════════════════════════════════════════╝")
-        print(f"{RESET}\n")
-        
         cprint("Select network list source:", CYAN)
         cprint("1) Use custom network list file")
         cprint("2) Create and use sample network list")

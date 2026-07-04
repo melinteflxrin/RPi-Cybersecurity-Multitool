@@ -91,7 +91,6 @@ def android_spam(device_ids, duration=60, interval=1):
         interval (int): Packet interval in seconds
     """
     
-    print(f"{GREEN}{BRIGHT}Android Spam Attack Initiated...{RESET}{BLUE}")
     
     active_socks = []
     
@@ -110,7 +109,6 @@ def android_spam(device_ids, duration=60, interval=1):
             print(f"{RED}No Bluetooth devices available!{RESET}")
             return
         
-        print(f"{GREEN}Hold on tight, we are flying far away!{RESET}")
         print(f"{CYAN}Broadcasting Android advertisements...{RESET}")
         print(f"{YELLOW}Duration: {duration} seconds{RESET}\n")
         
@@ -137,7 +135,7 @@ def android_spam(device_ids, duration=60, interval=1):
         print(f"{CYAN}Total transmissions: {sent_count}{RESET}")
         
     except KeyboardInterrupt:
-        print(f"\n{YELLOW}Operation ceased by user{RESET}")
+        print(f"\n{YELLOW}Attack stopped by user{RESET}")
     except Exception as err:
         print(f"{RED}Fatal error: {err}{RESET}")
     finally:
@@ -146,7 +144,6 @@ def android_spam(device_ids, duration=60, interval=1):
                 sock.close()
             except:
                 pass
-        print(f"{BLUE}Resources released.{RESET}")
 
 
 if __name__ == "__main__":

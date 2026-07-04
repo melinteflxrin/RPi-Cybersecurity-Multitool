@@ -116,11 +116,6 @@ class L2CAPDOSAttack:
         
         Prompts user for target MAC address and packet size configuration.
         """
-        print()
-        cprint("=" * 60, CYAN)
-        cprint("L2CAP Denial of Service Attack", CYAN)
-        cprint("=" * 60, CYAN)
-        print()
         
         cprint(f"Active adapters: {', '.join(self.adapters)}", WHITE)
         print()

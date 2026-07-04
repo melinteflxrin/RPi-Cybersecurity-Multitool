@@ -127,10 +127,6 @@ class AttackSuite:
         
         cprint("This attack broadcasts fake Apple device advertisements to nearby devices.", YELLOW)
         cprint("WARNING: Educational purposes only! Use responsibly.\n", RED)
-        cprint("TIPS for better results:", CYAN)
-        cprint("  • Interval: 0.1-0.5 seconds (lower = more aggressive, higher = more stealth)", WHITE)
-        cprint("  • Duration: 30-120 seconds (longer increases chance of detection)", WHITE)
-        cprint("  • Use multiple adapters if available for better coverage\n", WHITE)
         
         try:
             # Get configuration from user
@@ -215,13 +211,8 @@ class AttackSuite:
         print_banner("NameSpoof Adapter Spoofing Attack", MAGENTA)
         
         cprint("This attack continuously changes Bluetooth adapter names to deceptive values.", YELLOW)
-        cprint("It creates a 'fog' of fake Bluetooth devices by rapid name rotation.", YELLOW)
         cprint("WARNING: Educational purposes only! Use responsibly.\n", RED)
-        cprint("TIPS for better results:", CYAN)
-        cprint("  • Interval: 1-5 seconds (1 = rapid changes, 5 = slower rotation)", WHITE)
-        cprint("  • Use multiple adapters if available for doubled effect", WHITE)
-        cprint("  • Nearby devices will see your adapter appear as many devices\n", WHITE)
-        
+
         try:
             # Get configuration from user
             adapters = self.get_adapter_list()
@@ -272,7 +263,7 @@ class AttackSuite:
             scanner = BLEDeviceScanner()
             scanner.run()
             
-            sprint("BLE device scanner completed!")
+            sprint("BLE scanner stopped successfully!")
             
         except KeyboardInterrupt:
             wprint("\nScan stopped by user")
@@ -304,7 +295,7 @@ class AttackSuite:
             broadcaster = BeaconBroadcaster(interface)
             broadcaster.run_interactive()
             
-            sprint("Attack module completed!")
+            sprint("Attack completed!")
             
         except KeyboardInterrupt:
             wprint("\nAttack stopped by user")
@@ -336,7 +327,7 @@ class AttackSuite:
             flooder = APNetworkFlooder(interface)
             flooder.run_interactive()
             
-            sprint("Attack module completed!")
+            sprint("Attack completed!")
             
         except KeyboardInterrupt:
             wprint("\nAttack stopped by user")
@@ -393,9 +384,6 @@ class AttackSuite:
         cprint("Can target entire networks, routers, or specific devices.\n", YELLOW)
         cprint("Requirements: WiFi adapter in monitor mode", CYAN)
         cprint("WARNING: Educational purposes only! Use responsibly.\n", RED)
-        cprint("TIPS:", CYAN)
-        cprint("  • Run network scanner first to find target BSSIDs and devices", WHITE)
-        cprint("  • ESSID = network name, BSSID = router MAC, Device = client MAC\n", WHITE)
         
         try:
             # Get WiFi interface from user
@@ -407,7 +395,7 @@ class AttackSuite:
             deauth = DeauthAttack(interface)
             deauth.run_interactive()
             
-            sprint("Deauthentication module completed!")
+            sprint("Deauthentication attack completed!")
             
         except KeyboardInterrupt:
             wprint("\nAttack stopped by user")
@@ -430,9 +418,6 @@ class AttackSuite:
         cprint("Listens for responses to reveal networks that don't broadcast their name.\n", YELLOW)
         cprint("Requirements: WiFi adapter in monitor mode", CYAN)
         cprint("WARNING: Educational purposes only! Use responsibly.\n", RED)
-        cprint("TIPS:", CYAN)
-        cprint("  • Run network scanner first to find target router BSSID", WHITE)
-        cprint("  • Wordlist mode uses 75+ common network names\n", WHITE)
         
         try:
             # Get WiFi interface from user
@@ -516,7 +501,7 @@ class AttackSuite:
             attack = HTTPDOSAttack()
             attack.run_interactive()
             
-            sprint("HTTP DOS attack module completed!")
+            sprint("Attack module completed!")
             
         except KeyboardInterrupt:
             wprint("\nAttack stopped by user")
@@ -537,17 +522,13 @@ class AttackSuite:
         print_banner("Local Network DoS Attack", MAGENTA)
         
         cprint("This tool floods devices on your local WiFi network with packets.", YELLOW)
-        cprint("It will disconnect the target from the internet temporarily.\n", YELLOW)
+        cprint("It overwhelms the target's connection, causing lag, freezing, or lost internet.\n", YELLOW)
         cprint("Requirements: arp-scan and hping3 installed", CYAN)
         cprint("WARNING: Only test on networks/devices you own!\n", RED)
-        cprint("TIPS:", CYAN)
-        cprint("  • Run network scanner first to find target devices on WiFi", WHITE)
-        cprint("  • Get target IP from WiFi settings or use arp-scan", WHITE)
-        cprint("  • Target will lose internet during attack, recover when stopped\n", WHITE)
         
         try:
             # Get WiFi interface from user
-            interface = cinput("Enter WiFi interface name (e.g., wlan0)", LIGHT_CYAN) or "wlan0"
+            interface = cinput("Enter WiFi interface name (e.g., wlan1)", LIGHT_CYAN) or "wlan0"
             
             iprint(f"Using interface: {interface}")
             print()
@@ -555,7 +536,7 @@ class AttackSuite:
             # Run the localdos attack
             localdos(interface=interface)
             
-            sprint("Local DoS attack session completed!")
+            sprint("Attack completed!")
             
         except KeyboardInterrupt:
             wprint("\nAttack stopped by user")
@@ -578,12 +559,7 @@ class AttackSuite:
         cprint("This tool hosts a fake Facebook login page to capture credentials.", YELLOW)
         cprint("It is for educational purposes and authorized security testing only.\n", YELLOW)
         cprint("WARNING: Unauthorized phishing is illegal. Use only with permission!\n", RED)
-        cprint("TIPS:", CYAN)
-        cprint("  • Credentials are logged to a file with timestamps", WHITE)
-        cprint("  • Server runs on localhost - use SSH tunneling to access from remote", WHITE)
-        cprint("  • All captured attempts are displayed in real-time", WHITE)
-        cprint("  • For safety, this only works on localhost (not accessible externally)\n", WHITE)
-        
+
         try:
             # Get port from user
             port_input = cinput("Enter port [8000]: ")
@@ -599,7 +575,6 @@ class AttackSuite:
             phishing = FacebookPhishing(port=port)
             phishing.run_interactive()
             
-            sprint("Phishing server module completed!")
             
         except KeyboardInterrupt:
             wprint("\nServer stopped by user")
@@ -621,11 +596,6 @@ class AttackSuite:
         cprint("This tool hosts a fake Google login page to capture credentials.", YELLOW)
         cprint("It is for educational purposes and authorized security testing only.\n", YELLOW)
         cprint("WARNING: Unauthorized phishing is illegal. Use only with permission!\n", RED)
-        cprint("TIPS:", CYAN)
-        cprint("  • Credentials are logged to a file with timestamps", WHITE)
-        cprint("  • Server supports both localhost (SSH tunnel) and Cloudflare Tunnel", WHITE)
-        cprint("  • All captured attempts are displayed in real-time", WHITE)
-        cprint("  • Google login page closely mimics the real authentication flow\n", WHITE)
         
         try:
             # Get port from user
@@ -642,7 +612,6 @@ class AttackSuite:
             phishing = GooglePhishing(port=port)
             phishing.run_interactive()
             
-            sprint("Phishing server module completed!")
             
         except KeyboardInterrupt:
             wprint("\nServer stopped by user")
@@ -684,12 +653,7 @@ class AttackSuite:
         print_banner("L2CAP Denial of Service Attack", MAGENTA)
         
         cprint("This attack performs L2CAP ping flooding against target Bluetooth devices.", YELLOW)
-        cprint("It can potentially disrupt or deny service to target devices.\n", YELLOW)
         cprint("WARNING: Educational purposes only! Use responsibly.\n", RED)
-        cprint("TIPS:", CYAN)
-        cprint("  • Requires target device MAC address (find with BLE Device Scanner)", WHITE)
-        cprint("  • Uses multiple adapters for increased flooding capability", WHITE)
-        cprint("  • Packet size affects attack intensity (larger = more bandwidth)\n", WHITE)
         
         try:
             # Get adapters from user
@@ -866,8 +830,6 @@ class AttackSuite:
                     self.display_about()
                 elif choice in ["6", "exit", "e", "q", "quit"]:
                     clear()
-                    cprint("Closing the app...", GREEN)
-                    cprint("Bye!\n", CYAN)
                     self.running = False
                 else:
                     wprint(f"Invalid option: {choice}")

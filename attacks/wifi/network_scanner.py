@@ -78,7 +78,7 @@ class NetworkScanner:
                 if self.process.poll() is not None:
                     break
             
-            sprint("\nNetwork scan completed!")
+            sprint("\nScan stopped successfully!")
             
         except FileNotFoundError:
             eprint("airodump-ng not found. Install aircrack-ng: sudo apt-get install aircrack-ng")
