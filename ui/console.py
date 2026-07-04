@@ -24,6 +24,17 @@ LIGHT_MAGENTA = '\033[95m'
 LIGHT_CYAN = '\033[96m'
 LIGHT_WHITE = '\033[97m'
 
+# Theme palette for attack categories and navigation. These map onto the
+# terminal's standard 16 colors (not 24-bit "true color"), so they render
+# correctly everywhere, including the Raspberry Pi console. Each category
+# owns one color, and back/exit/about share a neutral navigation color.
+BLE_GREEN = LIGHT_GREEN       # BLE
+BT_BLUE = '\033[38;5;33m'     # Bluetooth (256-color azure, ~ #0082FC)
+WIFI_YELLOW = YELLOW      # WiFi
+PHISH_RED = RED           # Phishing
+MENU_GRAY = WHITE         # main menu border/title (light gray)
+NAV_GRAY = LIGHT_BLACK    # back / exit / about navigation (neutral gray)
+
 # Styles
 RESET = '\033[0m'
 BRIGHT = '\033[1m'

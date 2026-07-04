@@ -13,6 +13,7 @@ import sys
 import time
 from ui import (cprint, iprint, wprint, eprint, sprint, cinput,
                    RED, GREEN, CYAN, BLUE, YELLOW, MAGENTA, WHITE,
+                   BLE_GREEN, BT_BLUE, WIFI_YELLOW, PHISH_RED, MENU_GRAY, NAV_GRAY,
                    BRIGHT, RESET, LIGHT_CYAN, LIGHT_BLUE, clear, print_banner)
 from ui.menu import Menu
 
@@ -657,23 +658,22 @@ class AttackSuite:
         """Display the Phishing submenu."""
         clear()
         
-        cprint("╔════════════════════════════════════════════════════════╗", CYAN)
-        cprint("║               PHISHING ATTACKS MENU                    ║", CYAN)
-        cprint("╠════════════════════════════════════════════════════════╣", CYAN)
-        cprint("║                                                        ║", CYAN)
-        cprint("║  1) facebook  - Facebook Login Phishing Page           ║", LIGHT_CYAN)
+        cprint("╔════════════════════════════════════════════════════════╗", PHISH_RED)
+        cprint("║                 PHISHING ATTACKS MENU                  ║", PHISH_RED)
+        cprint("╠════════════════════════════════════════════════════════╣", PHISH_RED)
+        cprint("║                                                        ║", PHISH_RED)
+        cprint("║  1) facebook  - Facebook Login Phishing Page           ║", PHISH_RED)
         cprint("║                (Capture login credentials)             ║", WHITE)
-        cprint("║                                                        ║", CYAN)
-        cprint("║  2) google    - Google Login Phishing Page             ║", LIGHT_CYAN)
+        cprint("║  2) google    - Google Login Phishing Page             ║", PHISH_RED)
         cprint("║                (Capture email & password)              ║", WHITE)
-        cprint("║                                                        ║", CYAN)
-        cprint("║  b) back      - Return to Main Menu                    ║", YELLOW)
-        cprint("║  e) exit      - Quit Application                       ║", RED)
-        cprint("║                                                        ║", CYAN)
-        cprint("╚════════════════════════════════════════════════════════╝", CYAN)
+        cprint("║                                                        ║", PHISH_RED)
+        cprint("║  b) back      - Return to Main Menu                    ║", NAV_GRAY)
+        cprint("║  e) exit      - Quit Application                       ║", NAV_GRAY)
+        cprint("║                                                        ║", PHISH_RED)
+        cprint("╚════════════════════════════════════════════════════════╝", PHISH_RED)
         print()
-        
-        choice = cinput("Select attack", LIGHT_BLUE)
+
+        choice = cinput("Select attack", PHISH_RED)
         return choice
     
     def action_l2cap_dos_attack(self):
@@ -713,49 +713,50 @@ class AttackSuite:
         """Display the main category menu."""
         clear()
         
-        cprint("╔════════════════════════════════════════════════════════╗", CYAN)
-        cprint("║                    MAIN MENU                           ║", CYAN)
-        cprint("╠════════════════════════════════════════════════════════╣", CYAN)
-        cprint("║                                                        ║", CYAN)
-        cprint("║  1) BLE Attacks      - Bluetooth Low Energy Tools      ║", CYAN)
-        cprint("║  2) Bluetooth Attacks- Bluetooth Classic Tools         ║", CYAN)
-        cprint("║  3) WiFi Attacks     - WiFi Network Spoofing Tools     ║", CYAN)
-        cprint("║  4) Phishing         - Social Engineering Tools        ║", CYAN)
-        cprint("║  5) About            - Project Information             ║", CYAN)
-        cprint("║  6) Exit             - Quit Application                ║", CYAN)
-        cprint("║                                                        ║", CYAN)
-        cprint("╚════════════════════════════════════════════════════════╝", CYAN)
+        cprint("╔════════════════════════════════════════════════════════╗", MENU_GRAY)
+        cprint("║                       MAIN MENU                        ║", MENU_GRAY)
+        cprint("╠════════════════════════════════════════════════════════╣", MENU_GRAY)
+        cprint("║                                                        ║", MENU_GRAY)
+        cprint("║  1) BLE Attacks        - Bluetooth Low Energy Tools    ║", BLE_GREEN)
+        cprint("║  2) Bluetooth Attacks  - Bluetooth Classic Tools       ║", BT_BLUE)
+        cprint("║  3) WiFi Attacks       - WiFi Network Tools            ║", WIFI_YELLOW)
+        cprint("║  4) Phishing           - Social Engineering Tools      ║", PHISH_RED)
+        cprint("║                                                        ║", MENU_GRAY)
+        cprint("║  5) About              - Project Information           ║", NAV_GRAY)
+        cprint("║  6) Exit               - Quit Application              ║", NAV_GRAY)
+        cprint("║                                                        ║", MENU_GRAY)
+        cprint("╚════════════════════════════════════════════════════════╝", MENU_GRAY)
         print()
-        
-        choice = cinput("Select option", LIGHT_BLUE)
+
+        choice = cinput("Select option", MENU_GRAY)
         return choice
     
     def display_ble_menu(self):
         """Display the BLE attacks submenu."""
         clear()
         
-        cprint("╔════════════════════════════════════════════════════════╗", CYAN)
-        cprint("║                  BLE ATTACKS MENU                      ║", CYAN)
-        cprint("╠════════════════════════════════════════════════════════╣", CYAN)
-        cprint("║                                                        ║", CYAN)
-        cprint("║  1) airpods  - AirPods Spam Attack                     ║", LIGHT_CYAN)
+        cprint("╔════════════════════════════════════════════════════════╗", BLE_GREEN)
+        cprint("║                    BLE ATTACKS MENU                    ║", BLE_GREEN)
+        cprint("╠════════════════════════════════════════════════════════╣", BLE_GREEN)
+        cprint("║                                                        ║", BLE_GREEN)
+        cprint("║  1) airpods    - AirPods Spam Attack                   ║", BLE_GREEN)
         cprint("║               (Spam iOS devices with fake AirPods)     ║", WHITE)
-        cprint("║  2) adseed   - Apple Ad Spam Attack                    ║", LIGHT_CYAN)
+        cprint("║  2) adseed     - Apple Ad Spam Attack                  ║", BLE_GREEN)
         cprint("║               (Spam Apple devices)                     ║", WHITE)
-        cprint("║  3) android  - Android Spam Attack                     ║", LIGHT_CYAN)
+        cprint("║  3) android    - Android Spam Attack                   ║", BLE_GREEN)
         cprint("║               (Spam Android devices)                   ║", WHITE)
-        cprint("║  4) namespoof- NameSpoof Adapter Spoofing              ║", LIGHT_CYAN)
+        cprint("║  4) namespoof  - NameSpoof Adapter Spoofing            ║", BLE_GREEN)
         cprint("║               (Rotate adapter names)                   ║", WHITE)
-        cprint("║  5) scanner  - BLE Device Scanner                      ║", LIGHT_CYAN)
+        cprint("║  5) scanner    - BLE Device Scanner                    ║", BLE_GREEN)
         cprint("║               (Discover nearby BLE devices)            ║", WHITE)
-        cprint("║                                                        ║", CYAN)
-        cprint("║  b) back     - Return to Main Menu                     ║", YELLOW)
-        cprint("║  e) exit     - Quit Application                        ║", RED)
-        cprint("║                                                        ║", CYAN)
-        cprint("╚════════════════════════════════════════════════════════╝", CYAN)
+        cprint("║                                                        ║", BLE_GREEN)
+        cprint("║  b) back       - Return to Main Menu                   ║", NAV_GRAY)
+        cprint("║  e) exit       - Quit Application                      ║", NAV_GRAY)
+        cprint("║                                                        ║", BLE_GREEN)
+        cprint("╚════════════════════════════════════════════════════════╝", BLE_GREEN)
         print()
-        
-        choice = cinput("Select attack", LIGHT_BLUE)
+
+        choice = cinput("Select attack", BLE_GREEN)
         return choice
     
     def display_about(self):
@@ -796,54 +797,54 @@ class AttackSuite:
         """Display the Bluetooth attacks submenu."""
         clear()
         
-        cprint("╔════════════════════════════════════════════════════════╗", CYAN)
-        cprint("║              BLUETOOTH ATTACKS MENU                    ║", CYAN)
-        cprint("╠════════════════════════════════════════════════════════╣", CYAN)
-        cprint("║                                                        ║", CYAN)
-        cprint("║  1) l2cap_dos- L2CAP Denial of Service Attack          ║", LIGHT_CYAN)
+        cprint("╔════════════════════════════════════════════════════════╗", BT_BLUE)
+        cprint("║                 BLUETOOTH ATTACKS MENU                 ║", BT_BLUE)
+        cprint("╠════════════════════════════════════════════════════════╣", BT_BLUE)
+        cprint("║                                                        ║", BT_BLUE)
+        cprint("║  1) l2cap_dos  - L2CAP Denial of Service Attack        ║", BT_BLUE)
         cprint("║               (Flood target with L2CAP echo requests)  ║", WHITE)
-        cprint("║                                                        ║", CYAN)
-        cprint("║  b) back     - Return to Main Menu                     ║", YELLOW)
-        cprint("║  e) exit     - Quit Application                        ║", RED)
-        cprint("║                                                        ║", CYAN)
-        cprint("╚════════════════════════════════════════════════════════╝", CYAN)
+        cprint("║                                                        ║", BT_BLUE)
+        cprint("║  b) back       - Return to Main Menu                   ║", NAV_GRAY)
+        cprint("║  e) exit       - Quit Application                      ║", NAV_GRAY)
+        cprint("║                                                        ║", BT_BLUE)
+        cprint("╚════════════════════════════════════════════════════════╝", BT_BLUE)
         print()
-        
-        choice = cinput("Select attack", LIGHT_BLUE)
+
+        choice = cinput("Select attack", BT_BLUE)
         return choice
     
     def display_wifi_menu(self):
         """Display the WiFi attacks submenu."""
         clear()
         
-        cprint("╔════════════════════════════════════════════════════════╗", CYAN)
-        cprint("║                 WIFI ATTACKS MENU                      ║", CYAN)
-        cprint("╠════════════════════════════════════════════════════════╣", CYAN)
-        cprint("║                                                        ║", CYAN)
-        cprint("║  1) beacon   - Beacon Broadcast Attack                 ║", LIGHT_CYAN)
+        cprint("╔════════════════════════════════════════════════════════╗", WIFI_YELLOW)
+        cprint("║                   WIFI ATTACKS MENU                    ║", WIFI_YELLOW)
+        cprint("╠════════════════════════════════════════════════════════╣", WIFI_YELLOW)
+        cprint("║                                                        ║", WIFI_YELLOW)
+        cprint("║  1) beacon     - Beacon Broadcast Attack               ║", WIFI_YELLOW)
         cprint("║               (Broadcast fake WiFi networks)           ║", WHITE)
-        cprint("║  2) flood    - AP Network Flood Attack                 ║", LIGHT_CYAN)
+        cprint("║  2) flood      - AP Network Flood Attack               ║", WIFI_YELLOW)
         cprint("║               (Mass network broadcasting)              ║", WHITE)
-        cprint("║  3) scanner  - Live Network Scanner                    ║", LIGHT_CYAN)
+        cprint("║  3) scanner    - Live Network Scanner                  ║", WIFI_YELLOW)
         cprint("║               (Discover and monitor nearby networks)   ║", WHITE)
-        cprint("║  4) deauth   - Deauthentication Attack                 ║", LIGHT_CYAN)
+        cprint("║  4) deauth     - Deauthentication Attack               ║", WIFI_YELLOW)
         cprint("║               (Disconnect WiFi clients from networks)  ║", WHITE)
-        cprint("║  5) bruteforce- ESSID Bruteforce Attack                ║", LIGHT_CYAN)
+        cprint("║  5) bruteforce - ESSID Bruteforce Attack               ║", WIFI_YELLOW)
         cprint("║               (Discover hidden networks)               ║", WHITE)
-        cprint("║  6) capture  - Packet Capture Tool                     ║", LIGHT_CYAN)
+        cprint("║  6) capture    - Packet Capture Tool                   ║", WIFI_YELLOW)
         cprint("║               (Record WiFi traffic to .cap files)      ║", WHITE)
-        cprint("║  7) http_dos - HTTP Denial of Service                  ║", LIGHT_CYAN)
+        cprint("║  7) http_dos   - HTTP Denial of Service                ║", WIFI_YELLOW)
         cprint("║               (Flood target server with requests)      ║", WHITE)
-        cprint("║  8) localdos - Local Network DoS Attack                ║", LIGHT_CYAN)
+        cprint("║  8) localdos   - Local Network DoS Attack              ║", WIFI_YELLOW)
         cprint("║               (Flood target device on your WiFi)       ║", WHITE)
-        cprint("║                                                        ║", CYAN)
-        cprint("║  b) back     - Return to Main Menu                     ║", YELLOW)
-        cprint("║  e) exit     - Quit Application                        ║", RED)
-        cprint("║                                                        ║", CYAN)
-        cprint("╚════════════════════════════════════════════════════════╝", CYAN)
+        cprint("║                                                        ║", WIFI_YELLOW)
+        cprint("║  b) back       - Return to Main Menu                   ║", NAV_GRAY)
+        cprint("║  e) exit       - Quit Application                      ║", NAV_GRAY)
+        cprint("║                                                        ║", WIFI_YELLOW)
+        cprint("╚════════════════════════════════════════════════════════╝", WIFI_YELLOW)
         print()
-        
-        choice = cinput("Select attack", LIGHT_BLUE)
+
+        choice = cinput("Select attack", WIFI_YELLOW)
         return choice
     
     def run(self):
