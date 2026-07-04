@@ -662,33 +662,33 @@ class AttackSuite:
     
     def display_about(self):
         clear()
-        print_banner("About Attack Suite", BLUE)
-        
+        print_banner("About", BLUE)
+
         print(f"""{CYAN}
-    Attack Suite v2.0
-    
-    A collection of Bluetooth and WiFi attack tools for
-    security research and educational purposes.
-    
-    {YELLOW}Features:{RESET}
-    • BLE Attacks - AirPods spam, Android spam, Name spoofing
-    • WiFi Attacks - Beacon broadcast, AP network flooding
-    
+    An open-source security research platform running on a
+    Raspberry Pi Zero 2 W. It brings a range of WiFi, Bluetooth,
+    and phishing attacks together behind a single terminal menu,
+    with every attack implemented as a readable, inspectable
+    Python module for learning and hands-on experimentation.
+
+    {YELLOW}Attack domains:{RESET}
+    • WiFi - scanning, beacon spoofing, deauth, capture, DoS
+    • BLE - device scanning, AirPods/Android/Apple spam, name spoofing
+    • Bluetooth Classic - L2CAP DoS
+    • Phishing - Facebook & Google login replicas
+
     {YELLOW}Requirements:{RESET}
-    • Linux operating system
-    • Bluetooth adapter with BLE support
-    • WiFi adapter in monitor mode (for WiFi attacks)
-    • PyBluez library
-    • mdk4 tool (for WiFi attacks)
+    • Raspberry Pi OS (or another Debian-based Linux)
+    • Built-in Bluetooth adapter (BLE + Classic)
+    • External WiFi adapter with monitor mode (for WiFi attacks)
     • Root/sudo privileges
-    
+
     {RED}Disclaimer:{RESET}
     This tool is for EDUCATIONAL PURPOSES ONLY.
     Only use on devices and networks you own or have explicit permission to test.
     Unauthorized use may violate laws and regulations.
-    
-    {GREEN}Author: Personal Project
-    License: Educational Use Only{RESET}
+
+    {GREEN}License: Educational Use Only{RESET}
         """)
         
         input(f"\n{CYAN}Press Enter to continue...{RESET}")
