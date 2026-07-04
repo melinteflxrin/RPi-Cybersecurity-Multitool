@@ -1,6 +1,4 @@
 """
-Bluetooth utility functions for low-level BLE operations.
-
 This module provides functions to control Bluetooth devices and handle
 BLE (Bluetooth Low Energy) advertising on Linux systems.
 
@@ -40,9 +38,6 @@ def toggle_device(dev_id, enable):
     Args:
         dev_id (int): Device id (e.g., 0 for hci0).
         enable (bool): True to enable, False to disable the device.
-    
-    Raises:
-        IOError: If the device operation fails.
     """
     hci_sock = socket.socket(socket.AF_BLUETOOTH,
                              socket.SOCK_RAW,
@@ -77,9 +72,6 @@ def start_le_advertising(sock, min_interval=1000, max_interval=1000,
         max_interval (int): Maximum advertising interval in units of 0.625ms.
         adv_type (int): Advertisement type (default: ADV_NONCONN_IND).
         data (tuple): The advertisement data payload (max 31 bytes).
-    
-    Raises:
-        ValueError: If data exceeds 31 bytes.
     """
     own_bdaddr_type = 0      # Public address
     direct_bdaddr_type = 0
@@ -111,8 +103,6 @@ def start_le_advertising(sock, min_interval=1000, max_interval=1000,
 
 def stop_le_advertising(sock):
     """
-    Stop BLE advertising.
-
     Args:
         sock: A bluetooth HCI socket (from bluez.hci_open_dev).
     """

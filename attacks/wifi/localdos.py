@@ -10,7 +10,6 @@ from ui.console import cprint, iprint, wprint, eprint, cinput, CYAN, YELLOW
 
 
 class LocalDoS:
-    """Local Network Denial of Service Attack"""
     
     def __init__(self, interface="wlan0"):
         """
@@ -50,7 +49,6 @@ class LocalDoS:
             devices = []
             lines = result.stdout.split('\n')
             
-            # Parse arp-scan output
             for line in lines:
                 if not line.strip() or '\t' not in line:
                     continue
@@ -100,7 +98,6 @@ class LocalDoS:
             return False
     
     def display_devices(self, devices):
-        """Display discovered devices to user"""
         if not devices:
             wprint("No devices found on network")
             return
@@ -181,7 +178,6 @@ class LocalDoS:
             return False
     
     def run_interactive(self):
-        """Interactive mode for LocalDoS attack"""
         try:
             # Discover devices (rescan supported — a phone asleep on WiFi often
             # misses the first pass and shows up on a second scan)
@@ -215,7 +211,6 @@ class LocalDoS:
 
                 break
             
-            # Confirm target
             cprint(f"\n[!] Target selected: {target_ip}", YELLOW)
             confirm = cinput("Start attack? (Y/N)")
             
@@ -223,10 +218,8 @@ class LocalDoS:
                 wprint("Attack cancelled")
                 return
             
-            # Run attack
             self.run_attack(target_ip)
-            
-            # Ask for another round
+
             while True:
                 another = cinput("\nAnother round? (Y/N)")
                 if another.lower() == 'y':

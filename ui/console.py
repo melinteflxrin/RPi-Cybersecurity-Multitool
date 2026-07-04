@@ -59,22 +59,18 @@ def cprint(text, color=CYAN, end='\n'):
 
 
 def iprint(text, end='\n'):
-    """Print info message in light blue."""
     print(f"{LIGHT_BLUE}[INFO] {text}{RESET}", end=end)
 
 
 def wprint(text, end='\n'):
-    """Print warning message in yellow."""
     print(f"{YELLOW}[WARN] {text}{RESET}", end=end)
 
 
 def eprint(text, end='\n'):
-    """Print error message in red."""
     print(f"{RED}[ERROR] {text}{RESET}", end=end)
 
 
 def sprint(text, end='\n'):
-    """Print success message in green."""
     print(f"{GREEN}{text}{RESET}", end=end)
 
 
@@ -93,13 +89,11 @@ def cinput(prompt, color=LIGHT_CYAN):
 
 
 def clear():
-    """Clear the terminal screen."""
     import os
     os.system('cls' if os.name == 'nt' else 'clear')
 
 
 def print_banner(text, color=CYAN):
-    """Print a centered banner with borders."""
     width = 60
     print(f"\n{color}{'='*width}")
     print(f"{text:^{width}}")
@@ -107,5 +101,4 @@ def print_banner(text, color=CYAN):
 
 
 def print_line(color=CYAN):
-    """Print a horizontal line."""
     print(f"{color}{'-'*60}{RESET}")

@@ -17,20 +17,11 @@ from ui import cprint, iprint, wprint, eprint, sprint, cinput, CYAN, YELLOW, RED
 
 
 class BeaconBroadcaster:
-    """Manages WiFi beacon frame broadcasting attack."""
-    
     def __init__(self, interface):
-        """
-        Initialize beacon broadcaster.
-        
-        Args:
-            interface (str): WiFi interface name (e.g., wlan1, wlan1mon)
-        """
         self.interface = interface
         self.running = False
     
     def verify_monitor_mode(self):
-        """Verify interface is in monitor mode."""
         try:
             result = subprocess.run(
                 ["iwconfig", self.interface],
@@ -48,7 +39,6 @@ class BeaconBroadcaster:
             return False
     
     def broadcast_with_custom_name(self, ssid_name):
-        """Broadcast beacon frames with custom SSID."""
         if not self.verify_monitor_mode():
             return False
         
@@ -68,7 +58,6 @@ class BeaconBroadcaster:
             return False
     
     def broadcast_with_beacon_fuzzing(self):
-        """Broadcast with corrupted beacon data."""
         if not self.verify_monitor_mode():
             return False
         
@@ -88,7 +77,6 @@ class BeaconBroadcaster:
             return False
     
     def broadcast_random_ssids(self):
-        """Broadcast randomized beacon frames."""
         if not self.verify_monitor_mode():
             return False
         
@@ -108,7 +96,6 @@ class BeaconBroadcaster:
             return False
     
     def run_interactive(self):
-        """Run beacon broadcaster in interactive mode."""
         cprint("Attack Options:", CYAN)
         cprint("1) Broadcast with custom network name")
         cprint("2) Broadcast with beacon frame fuzzing")

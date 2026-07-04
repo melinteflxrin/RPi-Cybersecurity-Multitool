@@ -1,9 +1,7 @@
 #!/usr/bin/env python3
 """
-Attack Suite - Application
-
 The AttackSuite class: menus, navigation, and the per-attack actions. The
-entry point lives in main.py.
+entry point is in main.py.
 
 ATTRIBUTION: inspired by concepts from Jammy (https://github.com/FLOCK4H/Jammy)
 """
@@ -19,8 +17,6 @@ from ui.menu import Menu
 
 
 class AttackSuite:
-    """Main application class for security research attacks."""
-
     def __init__(self):
         self.running = True
         self._build_menus()
@@ -57,12 +53,6 @@ class AttackSuite:
         ])
     
     def get_adapter_list(self):
-        """
-        Get list of Bluetooth adapters from user.
-        
-        Returns:
-            list: List of HCI device identifiers (e.g., ["hci0", "hci1"]).
-        """
         try:
             num_adapters = int(cinput("How many Bluetooth adapters?", LIGHT_CYAN) or "1")
             adapters = [f"hci{i}" for i in range(num_adapters)]
@@ -73,7 +63,6 @@ class AttackSuite:
             return ["hci0"]
     
     def action_airpods_spam(self):
-        """Execute AirPods spam attack."""
         from attacks.ble.airpods_spam import airpods_spam
         
         clear()
@@ -83,14 +72,12 @@ class AttackSuite:
         cprint("WARNING: Educational purposes only! Use responsibly.\n", RED)
         
         try:
-            # Get configuration from user
             adapters = self.get_adapter_list()
             
             interval = int(cinput("Advertising interval (ms)", LIGHT_CYAN) or "200")
             duration = int(cinput("Duration (seconds)", LIGHT_CYAN) or "60")
             num_models = int(cinput("Number of AirPods models (1-5)", LIGHT_CYAN) or "5")
             
-            # Validate inputs
             num_models = max(1, min(5, num_models))
             
             print()
@@ -98,7 +85,6 @@ class AttackSuite:
             iprint(f"Press Ctrl+C to stop early")
             print()
             
-            # Execute attack
             airpods_spam(
                 device_ids=adapters,
                 interval=interval,
@@ -119,7 +105,6 @@ class AttackSuite:
         input(f"\n{CYAN}Press Enter to continue...{RESET}")
 
     def action_ad_spam(self):
-        """Execute Apple advertisement spam attack."""
         from attacks.ble.ad_spam import ad_spam
         
         clear()
@@ -129,13 +114,11 @@ class AttackSuite:
         cprint("WARNING: Educational purposes only! Use responsibly.\n", RED)
         
         try:
-            # Get configuration from user
             adapters = self.get_adapter_list()
             
             interval = float(cinput("Advertising interval (seconds, 0.1-1.0)", LIGHT_CYAN) or "0.2")
             duration = int(cinput("Duration (seconds)", LIGHT_CYAN) or "60")
             
-            # Validate interval
             interval = max(0.05, min(2.0, interval))
             
             print()
@@ -143,7 +126,6 @@ class AttackSuite:
             iprint(f"Press Ctrl+C to stop early")
             print()
             
-            # Execute attack
             ad_spam(
                 device_ids=adapters,
                 interval=interval,
@@ -163,7 +145,6 @@ class AttackSuite:
         input(f"\n{CYAN}Press Enter to continue...{RESET}")
 
     def action_android_spam(self):
-        """Execute Android spam attack."""
         from attacks.ble.android_spam import android_spam
         
         clear()
@@ -173,7 +154,6 @@ class AttackSuite:
         cprint("WARNING: Educational purposes only! Use responsibly.\n", RED)
         
         try:
-            # Get configuration from user
             adapters = self.get_adapter_list()
             
             interval = float(cinput("Advertising interval (seconds)", LIGHT_CYAN) or "1")
@@ -184,7 +164,6 @@ class AttackSuite:
             iprint(f"Press Ctrl+C to stop early")
             print()
             
-            # Execute attack
             android_spam(
                 device_ids=adapters,
                 interval=interval,
@@ -204,7 +183,6 @@ class AttackSuite:
         input(f"\n{CYAN}Press Enter to continue...{RESET}")
     
     def action_name_spoof(self):
-        """Execute NameSpoof adapter name spoofing attack."""
         from attacks.ble.name_spoofer import NameSpoofAttack
         
         clear()
@@ -214,7 +192,6 @@ class AttackSuite:
         cprint("WARNING: Educational purposes only! Use responsibly.\n", RED)
 
         try:
-            # Get configuration from user
             adapters = self.get_adapter_list()
             adapter_indices = [int(a.replace("hci", "")) for a in adapters]
             
@@ -231,7 +208,6 @@ class AttackSuite:
             iprint(f"Press Ctrl+C to stop", YELLOW)
             print()
             
-            # Execute attack
             attack = NameSpoofAttack(adapter_indices, interval=interval)
             attack.start()
             
@@ -248,7 +224,6 @@ class AttackSuite:
         input(f"\n{CYAN}Press Enter to continue...{RESET}")
     
     def action_device_scanner(self):
-        """Execute BLE Device Scanner reconnaissance tool."""
         from attacks.ble.device_scanner import BLEDeviceScanner
         
         clear()
@@ -259,7 +234,6 @@ class AttackSuite:
         cprint("WARNING: Educational purposes only! Use responsibly.\n", RED)
         
         try:
-            # Create scanner
             scanner = BLEDeviceScanner()
             scanner.run()
             
@@ -276,7 +250,6 @@ class AttackSuite:
         input(f"\n{CYAN}Press Enter to continue...{RESET}")
     
     def action_beacon_broadcast(self):
-        """Execute Beacon Broadcast WiFi attack."""
         from attacks.wifi.beacon_broadcast import BeaconBroadcaster
         
         clear()
@@ -286,12 +259,10 @@ class AttackSuite:
         cprint("WARNING: Educational purposes only! Use responsibly.\n", RED)
         
         try:
-            # Get WiFi interface from user
             interface = cinput("Enter WiFi interface name (e.g., wlan1)", LIGHT_CYAN) or "wlan1mon"
             
             iprint(f"Using interface: {interface}")
             
-            # Create and run attack
             broadcaster = BeaconBroadcaster(interface)
             broadcaster.run_interactive()
             
@@ -308,7 +279,6 @@ class AttackSuite:
         input(f"\n{CYAN}Press Enter to continue...{RESET}")
     
     def action_ap_network_flood(self):
-        """Execute AP Network Flood WiFi attack."""
         from attacks.wifi.ap_network_flood import APNetworkFlooder
         
         clear()
@@ -318,12 +288,10 @@ class AttackSuite:
         cprint("WARNING: Educational purposes only! Use responsibly.\n", RED)
         
         try:
-            # Get WiFi interface from user
             interface = cinput("Enter WiFi interface name (e.g., wlan1)", LIGHT_CYAN) or "wlan1mon"
             
             iprint(f"Using interface: {interface}")
             
-            # Create and run attack
             flooder = APNetworkFlooder(interface)
             flooder.run_interactive()
             
@@ -340,7 +308,6 @@ class AttackSuite:
         input(f"\n{CYAN}Press Enter to continue...{RESET}")
     
     def action_network_scanner(self):
-        """Execute Network Scanner WiFi reconnaissance tool."""
         from attacks.wifi.network_scanner import NetworkScanner
         
         clear()
@@ -352,12 +319,10 @@ class AttackSuite:
         cprint("WARNING: Educational purposes only! Use responsibly.\n", RED)
         
         try:
-            # Get WiFi interface from user
             interface = cinput("Enter WiFi interface name (e.g., wlan1)", LIGHT_CYAN) or "wlan1mon"
             
             iprint(f"Using interface: {interface}\n")
             
-            # Create and run scanner
             scanner = NetworkScanner(interface)
             scanner.run()
             
@@ -374,7 +339,6 @@ class AttackSuite:
         input(f"\n{CYAN}Press Enter to continue...{RESET}")
     
     def action_deauth_attack(self):
-        """Execute Deauthentication WiFi attack."""
         from attacks.wifi.deauth_attack import DeauthAttack
         
         clear()
@@ -386,12 +350,10 @@ class AttackSuite:
         cprint("WARNING: Educational purposes only! Use responsibly.\n", RED)
         
         try:
-            # Get WiFi interface from user
             interface = cinput("Enter WiFi interface name (e.g., wlan1)", LIGHT_CYAN) or "wlan1mon"
             
             iprint(f"Using interface: {interface}")
             
-            # Create and run attack
             deauth = DeauthAttack(interface)
             deauth.run_interactive()
             
@@ -408,7 +370,6 @@ class AttackSuite:
         input(f"\n{CYAN}Press Enter to continue...{RESET}")
     
     def action_essid_bruteforce(self):
-        """Execute ESSID Bruteforce WiFi attack."""
         from attacks.wifi.essid_bruteforce import ESSIDBruteforcer
         
         clear()
@@ -420,12 +381,10 @@ class AttackSuite:
         cprint("WARNING: Educational purposes only! Use responsibly.\n", RED)
         
         try:
-            # Get WiFi interface from user
             interface = cinput("Enter WiFi interface name (e.g., wlan1)", LIGHT_CYAN) or "wlan1mon"
             
             iprint(f"Using interface: {interface}")
             
-            # Create and run bruteforcer
             bruteforcer = ESSIDBruteforcer(interface)
             bruteforcer.run_interactive()
             
@@ -442,7 +401,6 @@ class AttackSuite:
         input(f"\n{CYAN}Press Enter to continue...{RESET}")
     
     def action_packet_capture(self):
-        """Execute Packet Capture WiFi analysis tool."""
         from attacks.wifi.packet_capture import PacketCapture
         
         clear()
@@ -458,12 +416,10 @@ class AttackSuite:
         cprint("  • Great for learning WiFi protocols\n", WHITE)
         
         try:
-            # Get WiFi interface from user
             interface = cinput("Enter WiFi interface name (e.g., wlan1)", LIGHT_CYAN) or "wlan1mon"
             
             iprint(f"Using interface: {interface}")
             
-            # Create and run packet capture
             capture = PacketCapture(interface)
             capture.run_interactive()
             
@@ -480,7 +436,6 @@ class AttackSuite:
         input(f"\n{CYAN}Press Enter to continue...{RESET}")
     
     def action_http_dos_attack(self):
-        """Execute HTTP Denial of Service attack."""
         from attacks.wifi.http_dos import HTTPDOSAttack
         
         clear()
@@ -497,7 +452,6 @@ class AttackSuite:
         cprint("  • Great for load testing and stress testing servers\n", WHITE)
         
         try:
-            # Create and run attack
             attack = HTTPDOSAttack()
             attack.run_interactive()
             
@@ -515,7 +469,6 @@ class AttackSuite:
     
     
     def action_localdos(self):
-        """Execute Local Network DoS attack."""
         from attacks.wifi.localdos import localdos
         
         clear()
@@ -527,13 +480,11 @@ class AttackSuite:
         cprint("WARNING: Only test on networks/devices you own!\n", RED)
         
         try:
-            # Get WiFi interface from user
             interface = cinput("Enter WiFi interface name (e.g., wlan1)", LIGHT_CYAN) or "wlan0"
             
             iprint(f"Using interface: {interface}")
             print()
             
-            # Run the localdos attack
             localdos(interface=interface)
             
             sprint("Attack completed!")
@@ -550,7 +501,6 @@ class AttackSuite:
         input(f"\n{CYAN}Press Enter to continue...{RESET}")
     
     def action_facebook_phishing(self):
-        """Execute Facebook phishing server."""
         from attacks.phishing.facebook_phish import FacebookPhishing
         
         clear()
@@ -561,17 +511,14 @@ class AttackSuite:
         cprint("WARNING: Unauthorized phishing is illegal. Use only with permission!\n", RED)
 
         try:
-            # Get port from user
             port_input = cinput("Enter port [8000]: ")
             port = int(port_input) if port_input else 8000
             
-            # Validate port
             if not (1 <= port <= 65535):
                 eprint("Invalid port number")
                 input(f"\n{CYAN}Press Enter to continue...{RESET}")
                 return
             
-            # Create and run phishing server
             phishing = FacebookPhishing(port=port)
             phishing.run_interactive()
             
@@ -587,7 +534,6 @@ class AttackSuite:
         input(f"\n{CYAN}Press Enter to continue...{RESET}")
     
     def action_google_phishing(self):
-        """Execute Google phishing server."""
         from attacks.phishing.google_phish import GooglePhishing
         
         clear()
@@ -598,17 +544,14 @@ class AttackSuite:
         cprint("WARNING: Unauthorized phishing is illegal. Use only with permission!\n", RED)
         
         try:
-            # Get port from user
             port_input = cinput("Enter port [8000]: ")
             port = int(port_input) if port_input else 8000
             
-            # Validate port
             if not (1 <= port <= 65535):
                 eprint("Invalid port number")
                 input(f"\n{CYAN}Press Enter to continue...{RESET}")
                 return
             
-            # Create and run phishing server
             phishing = GooglePhishing(port=port)
             phishing.run_interactive()
             
@@ -624,7 +567,6 @@ class AttackSuite:
         input(f"\n{CYAN}Press Enter to continue...{RESET}")
     
     def display_phishing_menu(self):
-        """Display the Phishing submenu."""
         clear()
         
         cprint("╔════════════════════════════════════════════════════════╗", PHISH_RED)
@@ -646,7 +588,6 @@ class AttackSuite:
         return choice
     
     def action_l2cap_dos_attack(self):
-        """Execute L2CAP Denial of Service attack."""
         from attacks.bt.l2cap_dos_attack import L2CAPDOSAttack
         
         clear()
@@ -656,10 +597,8 @@ class AttackSuite:
         cprint("WARNING: Educational purposes only! Use responsibly.\n", RED)
         
         try:
-            # Get adapters from user
             adapters = self.get_adapter_list()
             
-            # Create and run attack
             attack = L2CAPDOSAttack(adapters)
             attack.run_interactive()
             
@@ -674,7 +613,6 @@ class AttackSuite:
         input(f"\n{CYAN}Press Enter to continue...{RESET}")
     
     def display_main_menu(self):
-        """Display the main category menu."""
         clear()
         
         cprint("╔════════════════════════════════════════════════════════╗", MENU_GRAY)
@@ -696,7 +634,6 @@ class AttackSuite:
         return choice
     
     def display_ble_menu(self):
-        """Display the BLE attacks submenu."""
         clear()
         
         cprint("╔════════════════════════════════════════════════════════╗", BLE_GREEN)
@@ -724,7 +661,6 @@ class AttackSuite:
         return choice
     
     def display_about(self):
-        """Display about information."""
         clear()
         print_banner("About Attack Suite", BLUE)
         
@@ -758,7 +694,6 @@ class AttackSuite:
         input(f"\n{CYAN}Press Enter to continue...{RESET}")
     
     def display_bluetooth_menu(self):
-        """Display the Bluetooth attacks submenu."""
         clear()
         
         cprint("╔════════════════════════════════════════════════════════╗", BT_BLUE)
@@ -778,7 +713,6 @@ class AttackSuite:
         return choice
     
     def display_wifi_menu(self):
-        """Display the WiFi attacks submenu."""
         clear()
         
         cprint("╔════════════════════════════════════════════════════════╗", WIFI_YELLOW)
@@ -812,7 +746,6 @@ class AttackSuite:
         return choice
     
     def run(self):
-        """Main application loop."""
         try:
             while self.running:
                 choice = self.display_main_menu()

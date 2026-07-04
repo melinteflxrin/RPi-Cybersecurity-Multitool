@@ -1,14 +1,7 @@
 #!/usr/bin/env python3
 """
-AP Network Flood Attack - Mass WiFi Network Broadcasting
-
 Floods the WiFi spectrum with multiple fake access point advertisements
 by reading network names from a configuration file.
-
-Features:
-- Batch SSID loading from files
-- Mass network broadcasting
-- Customizable network lists
 """
 
 import os
@@ -16,23 +9,13 @@ import subprocess
 from ui import cprint, iprint, wprint, eprint, sprint, cinput, CYAN, YELLOW, RED, GREEN
 
 
-class APNetworkFlooder:
-    """Manages mass access point network flooding."""
-    
+class APNetworkFlooder:    
     def __init__(self, interface):
-        """
-        Initialize AP network flooder.
-        
-        Args:
-            interface (str): WiFi interface name (e.g., wlan1, wlan1mon)
-        """
         self.interface = interface
-        # Default list file in wifi/data/ directory
         script_dir = os.path.dirname(os.path.abspath(__file__))
         self.default_list_file = os.path.join(script_dir, "data", "ap_networks.txt")
     
     def verify_monitor_mode(self):
-        """Verify interface is in monitor mode."""
         try:
             result = subprocess.run(
                 ["iwconfig", self.interface],
@@ -50,7 +33,6 @@ class APNetworkFlooder:
             return False
     
     def verify_network_list(self, filepath):
-        """Verify network list file exists and has content."""
         if not os.path.exists(filepath):
             eprint(f"Network list file not found: {filepath}")
             return False
@@ -70,7 +52,6 @@ class APNetworkFlooder:
             return False
     
     def flood_networks_from_file(self, filepath):
-        """Flood networks using SSIDs from file."""
         if not self.verify_monitor_mode():
             return False
         
@@ -94,7 +75,6 @@ class APNetworkFlooder:
             return False
     
     def create_sample_network_list(self):
-        """Create a sample network list file."""
         sample_networks = [
             "FreeWiFi",
             "Airport_Secure",
@@ -120,7 +100,6 @@ class APNetworkFlooder:
             return False
     
     def run_interactive(self):
-        """Run AP network flooder in interactive mode."""
         cprint("Select network list source:", CYAN)
         cprint("1) Use custom network list file")
         cprint("2) Create and use sample network list")

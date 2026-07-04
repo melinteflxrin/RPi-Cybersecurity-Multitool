@@ -1,9 +1,7 @@
 #!/usr/bin/env python3
 """
-Attack Suite - Entry Point
-
-A menu-driven application for BLE, Bluetooth, and WiFi attacks and security
-research tools. Run from the repository root with: sudo python main.py
+application for BLE, Bluetooth, and WiFi attacks and security research tools. 
+run from the repository root with: sudo python main.py
 
 ATTRIBUTION: inspired by concepts from Jammy (https://github.com/FLOCK4H/Jammy)
 """
@@ -15,7 +13,6 @@ from ui.app import AttackSuite
 
 
 def check_requirements():
-    """Check if required dependencies are installed."""
     try:
         import bluetooth._bluetooth as bluez
     except ImportError:
@@ -40,7 +37,6 @@ def check_requirements():
 
 
 def main():
-    """Entry point for the application."""
     if not check_requirements():
         sys.exit(1)
 

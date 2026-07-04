@@ -12,28 +12,11 @@ from ui import (cprint, iprint, wprint, eprint, sprint, RED, GREEN, CYAN,
 
 
 class NetworkScanner:
-    """
-    Continuous WiFi network scanner that discovers and monitors
-    nearby networks and connected client devices in real-time.
-    """
-    
     def __init__(self, interface):
-        """
-        Initialize the network scanner.
-        
-        Args:
-            interface (str): WiFi interface in monitor mode (e.g., "wlan1mon")
-        """
         self.interface = interface
         self.process = None
     
     def verify_monitor_mode(self):
-        """
-        Verify that the interface is in monitor mode.
-        
-        Returns:
-            bool: True if interface is in monitor mode, False otherwise
-        """
         try:
             result = subprocess.run(
                 ["iwconfig", self.interface],
@@ -47,7 +30,6 @@ class NetworkScanner:
             return False
     
     def start_continuous_scan(self):
-        """Start continuous network scanning until interrupted."""
         if not self.verify_monitor_mode():
             eprint(f"Interface {self.interface} is not in monitor mode!")
             return
@@ -57,7 +39,6 @@ class NetworkScanner:
             iprint("Press Ctrl+C to stop scanning\n")
             time.sleep(1)
             
-            # Run airodump-ng
             cmd = f"airodump-ng {self.interface}"
             
             self.process = subprocess.Popen(
@@ -95,5 +76,4 @@ class NetworkScanner:
                     self.process.kill()
     
     def run(self):
-        """Start the continuous network scanner."""
         self.start_continuous_scan()

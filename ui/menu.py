@@ -2,10 +2,7 @@
 Generic terminal menu navigation.
 
 A :class:`Menu` pairs a display function (which draws a screen and returns the
-user's raw choice) with a table of ``(aliases, action)`` entries. It runs the
-same navigation loop every submenu used to hand-code: dispatch the chosen
-action, or handle back / exit / invalid input identically. This removes the
-duplicated ``handle_*_menu`` boilerplate without changing any on-screen output.
+user's raw choice) with a table of ``(aliases, action)`` entries.
 """
 
 import time

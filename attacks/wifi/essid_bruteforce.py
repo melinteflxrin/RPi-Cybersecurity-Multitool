@@ -1,6 +1,4 @@
 """
-ESSID Bruteforce - Hidden Network Discovery Tool
-
 This module discovers hidden WiFi networks by sending directed 802.11 probe
 requests to a target AP and listening for probe responses.
 """
@@ -14,11 +12,6 @@ from ui import (cprint, iprint, wprint, eprint, sprint, cinput,
 
 
 class ESSIDBruteforcer:
-    """
-    Discovers hidden WiFi networks by sending directed 802.11 probe requests
-    to a target BSSID and capturing probe responses.
-    """
-
     def __init__(self, interface):
         self.interface = interface
         self.found_ssids = []

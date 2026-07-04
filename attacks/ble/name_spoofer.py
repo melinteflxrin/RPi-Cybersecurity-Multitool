@@ -1,25 +1,7 @@
 #!/usr/bin/env python3
 """
-NameSpoof Attack - Bluetooth Device Name Spoofing
-
 This script implements a Bluetooth device spoofing technique that rapidly changes
-the adapter name to various deceptive identifiers. It creates a "fog" of Bluetooth
-device names that rotate through a predefined list, confusing nearby devices and
-appearing as if multiple different Bluetooth devices are present in the area.
-
-The attack works by:
-1. Enabling BLE advertising on specified adapters
-2. Continuously cycling through fake device names every N seconds
-3. Making it appear as if many different devices are present
-
-This is primarily a camouflage/reconnaissance technique. Use responsibly and
-only on devices/networks you own or have explicit permission to test.
-
-Features:
-- Multi-adapter support (multiple Bluetooth radios)
-- Customizable name rotation interval
-- Pre-configured list of humorous/deceptive names
-- Graceful shutdown on interrupt
+the adapter name to various deceptive identifiers.
 """
 
 import os
@@ -29,9 +11,8 @@ import subprocess
 from typing import List, Optional
 
 
-# Deceptive and humorous device names for spoofing
+# Deceptive device names for spoofing
 SPOOFED_DEVICE_NAMES = [
-    # Tech company branding confusion
     "Samsung Galaxy Tab",
     "iPhone 15",
     "iPad Pro",
@@ -43,7 +24,6 @@ SPOOFED_DEVICE_NAMES = [
     "Xbox Series X",
     "Nintendo Switch",
     
-    # Service impersonation (humorous)
     "McDonald's Order System",
     "Starbucks Register",
     "Uber Driver Vehicle",
@@ -51,20 +31,17 @@ SPOOFED_DEVICE_NAMES = [
     "Amazon Delivery Drone",
     "DHL Logistics Device",
     
-    # Scary/intimidating names
     "FBI Surveillance Unit",
     "Police Department Device",
     "Suspicious Network Monitor",
     "Hacker Detection System",
-    
-    # Fictional references
+
     "Skynet Terminator",
     "HAL 9000",
     "Siri Personal Assistant",
     "Alexa Amazon Echo",
     "Google Assistant",
     
-    # Misleading names
     "Not Your Device",
     "Free Public WiFi",
     "Airport Secure Network",
@@ -73,8 +50,7 @@ SPOOFED_DEVICE_NAMES = [
     "Admin Panel",
     "Network Router",
     "Printer Service",
-    
-    # Random nonsense
+
     "Device_001",
     "Unknown_BT_Device",
     "Mystery_Connection",
@@ -84,17 +60,7 @@ SPOOFED_DEVICE_NAMES = [
 
 
 class NameSpoofAttack:
-    """Manages Bluetooth adapter name spoofing attack."""
-    
     def __init__(self, adapter_indices: List[int], interval: int = 5, custom_names: Optional[List[str]] = None):
-        """
-        Initialize NameSpoof attack.
-        
-        Args:
-            adapter_indices: List of HCI device indices (e.g., [0, 1] for hci0, hci1)
-            interval: Seconds between name changes (default: 5)
-            custom_names: Optional custom list of names to use instead of default
-        """
         self.adapter_indices = adapter_indices
         self.interval = max(1, interval)  # Ensure minimum 1 second
         self.device_names = custom_names if custom_names else SPOOFED_DEVICE_NAMES
@@ -102,15 +68,6 @@ class NameSpoofAttack:
         self.name_change_count = 0
     
     def _enable_le_advertising(self, hci_index: int) -> bool:
-        """
-        Enable Low Energy advertising on a specific adapter.
-        
-        Args:
-            hci_index: HCI device index (0 for hci0, 1 for hci1, etc.)
-        
-        Returns:
-            True if successful, False otherwise
-        """
         commands = "\n".join([
             "le on",
             "connectable on",
@@ -145,16 +102,6 @@ class NameSpoofAttack:
             return False
     
     def _change_adapter_name(self, hci_index: int, new_name: str) -> bool:
-        """
-        Change the Bluetooth adapter name.
-        
-        Args:
-            hci_index: HCI device index
-            new_name: New name to set
-        
-        Returns:
-            True if successful, False otherwise
-        """
         try:
             # Use btmgmt to change the adapter name
             result = subprocess.run(
@@ -173,7 +120,6 @@ class NameSpoofAttack:
             return False
     
     def _rotation_loop(self):
-        """Main rotation loop that cycles through adapter names."""
         print(f"[*] Starting NameSpoof attack with {len(self.adapter_indices)} adapter(s)")
         print(f"[*] Name rotation interval: {self.interval}s")
         print(f"[*] Pool of names: {len(self.device_names)}")
@@ -202,12 +148,6 @@ class NameSpoofAttack:
             self.running = False
     
     def start(self) -> bool:
-        """
-        Start the NameSpoof attack.
-        
-        Returns:
-            True if attack started successfully, False otherwise
-        """
         # First, enable LE advertising on all adapters
         all_enabled = True
         for hci_index in self.adapter_indices:
@@ -228,7 +168,6 @@ class NameSpoofAttack:
         return True
     
     def stop(self):
-        """Stop the NameSpoof attack and clean up."""
         self.running = False
         print("[*] Disabling advertising...")
         
@@ -245,9 +184,7 @@ class NameSpoofAttack:
 
 
 def parse_adapter_input(adapter_str: str) -> List[int]:
-    """
-    Parse adapter input string into list of indices.
-    
+    """    
     Args:
         adapter_str: String like "0" or "0,1,2" or "hci0,hci1"
     
@@ -269,7 +206,6 @@ def parse_adapter_input(adapter_str: str) -> List[int]:
 
 
 def run_interactive():
-    """Run NameSpoof in interactive mode."""
     print("\n")
     print("╔════════════════════════════════════════╗")
     print("║       NameSpoof Adapter Attack         ║")

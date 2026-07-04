@@ -13,28 +13,11 @@ from ui import (cprint, iprint, wprint, eprint, sprint, cinput,
 
 
 class DeauthAttack:
-    """
-    Wireless deauthentication attack targeting networks and devices.
-    Can disconnect clients from specific networks or routers.
-    """
-    
     def __init__(self, interface):
-        """
-        Initialize the deauth attack tool.
-        
-        Args:
-            interface (str): WiFi interface in monitor mode (e.g., "wlan1mon")
-        """
         self.interface = interface
         self.process = None
     
     def verify_monitor_mode(self):
-        """
-        Verify that the interface is in monitor mode.
-        
-        Returns:
-            bool: True if interface is in monitor mode, False otherwise
-        """
         try:
             result = subprocess.run(
                 ["iwconfig", self.interface],
@@ -203,7 +186,6 @@ class DeauthAttack:
                     self.process.kill()
     
     def stop_attack(self):
-        """Terminate the attack process."""
         if self.process:
             try:
                 self.process.terminate()
@@ -212,7 +194,6 @@ class DeauthAttack:
                 self.process.kill()
     
     def display_target_menu(self):
-        """Display target selection menu."""
         print()
         cprint("╔════════════════════════════════════════════════════════╗", CYAN)
         cprint("║              SELECT ATTACK TARGET TYPE                 ║", CYAN)
@@ -232,7 +213,6 @@ class DeauthAttack:
         cprint("╚════════════════════════════════════════════════════════╝", CYAN)
     
     def run_interactive(self):
-        """Interactive deauth attack menu."""
         while True:
             clear()
             cprint("╔════════════════════════════════════════════════════════╗", MAGENTA)

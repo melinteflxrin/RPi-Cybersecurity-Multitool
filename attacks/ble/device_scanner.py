@@ -1,6 +1,4 @@
 """
-BLE Device Scanner - Bluetooth Low Energy Device Discovery Tool
-
 This module continuously scans for nearby Bluetooth Low Energy devices
 and displays real-time information in a "Wall of Sheep" style table.
 
@@ -24,25 +22,13 @@ from ui import (cprint, iprint, wprint, eprint, sprint, cinput,
 
 
 class BLEDeviceScanner:
-    """
-    Comprehensive BLE device scanner with company identification,
-    distance estimation, and persistent device tracking.
-    """
-    
     def __init__(self, scan_duration=None):
-        """
-        Initialize the BLE device scanner.
-        
-        Args:
-            scan_duration (float): Duration for each scan in seconds (None = until Ctrl+C)
-        """
         self.scan_duration = scan_duration
         self.devices = {}  # {mac: {name, rssi, tx_power, company, first_seen, last_seen, count}}
         self.running = True
         self.company_ids = self._load_company_ids()
     
     def _load_company_ids(self):
-        """Load company identifiers from YAML file."""
         company_ids = {}
         
         # Try to load from company_identifiers.yaml file
@@ -119,7 +105,7 @@ class BLEDeviceScanner:
         }
     
     def _get_company_name(self, company_id):
-        """Get company name from manufacturer ID."""
+        """get company name from manufacturer ID"""
         if company_id in self.company_ids:
             return self.company_ids[company_id]
         return f"Mfg:{company_id:04X}"
@@ -148,7 +134,6 @@ class BLEDeviceScanner:
             return None
     
     async def start_continuous_scan(self):
-        """Start continuous BLE device scanning using bleak."""
         try:
             from bleak import BleakScanner, AdvertisementData, BLEDevice
         except ImportError:
@@ -269,8 +254,6 @@ class BLEDeviceScanner:
             eprint("Make sure Bluetooth is enabled and available on your system")
     
     def run(self):
-        """Main entry point for the BLE device scanner."""
-
         try:
             asyncio.run(self.start_continuous_scan())
         except KeyboardInterrupt:

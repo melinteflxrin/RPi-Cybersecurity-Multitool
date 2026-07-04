@@ -15,29 +15,12 @@ from ui import (cprint, iprint, wprint, eprint, sprint, cinput,
 
 
 class PacketCapture:
-    """
-    Captures WiFi network traffic to .cap files for forensic analysis
-    and network monitoring.
-    """
-    
     def __init__(self, interface):
-        """
-        Initialize the packet capture tool.
-        
-        Args:
-            interface (str): WiFi interface in monitor mode (e.g., "wlan1mon")
-        """
         self.interface = interface
         self.process = None
         self.capture_file = None
     
     def verify_monitor_mode(self):
-        """
-        Verify that the interface is in monitor mode.
-        
-        Returns:
-            bool: True if interface is in monitor mode, False otherwise
-        """
         try:
             result = subprocess.run(
                 ["iwconfig", self.interface],
@@ -51,18 +34,10 @@ class PacketCapture:
             return False
     
     def get_default_capture_path(self):
-        """
-        Generate a default capture file path with timestamp.
-        
-        Returns:
-            str: Path to capture file
-        """
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        # Create captures folder in the wifi module directory
         script_dir = os.path.dirname(os.path.abspath(__file__))
         default_dir = os.path.join(script_dir, "captures")
-        
-        # Create directory if it doesn't exist
+
         try:
             os.makedirs(default_dir, exist_ok=True)
         except Exception as e:
@@ -72,19 +47,8 @@ class PacketCapture:
         return os.path.join(default_dir, f"capture_{timestamp}")
     
     def validate_output_path(self, user_path):
-        """
-        Validate and prepare output path for capture file.
-        
-        Args:
-            user_path (str): User-provided path
-            
-        Returns:
-            str: Valid file path or None if invalid
-        """
-        # Expand home directory
         path = os.path.expanduser(user_path)
-        
-        # Create parent directory if needed
+
         parent_dir = os.path.dirname(path)
         if parent_dir and not os.path.exists(parent_dir):
             try:
@@ -94,7 +58,6 @@ class PacketCapture:
                 eprint(f"Cannot create directory: {e}")
                 return None
         
-        # Check write permissions
         test_dir = parent_dir if parent_dir else "."
         if not os.access(test_dir, os.W_OK):
             eprint(f"No write permission for: {test_dir}")
@@ -103,12 +66,6 @@ class PacketCapture:
         return path
     
     def start_capture(self, output_path):
-        """
-        Start capturing WiFi packets to file.
-        
-        Args:
-            output_path (str): Path to save .cap file
-        """
         try:
             if not self.verify_monitor_mode():
                 eprint(f"Interface {self.interface} is not in monitor mode!")
@@ -120,7 +77,6 @@ class PacketCapture:
             iprint(f"Press Ctrl+C to stop capture\n")
             time.sleep(1)
             
-            # Run airodump-ng to capture packets
             cmd = f"airodump-ng {self.interface} -w {output_path}"
             
             self.process = subprocess.Popen(
@@ -158,14 +114,12 @@ class PacketCapture:
             return False
     
     def stop_capture(self):
-        """Stop the ongoing packet capture."""
         if self.process:
             try:
                 wprint("\nStopping capture...")
                 self.process.terminate()
                 self.process.wait(timeout=3)
                 
-                # List captured files
                 if self.capture_file:
                     parent_dir = os.path.dirname(self.capture_file)
                     filename = os.path.basename(self.capture_file)
@@ -189,7 +143,6 @@ class PacketCapture:
                 eprint(f"Error stopping capture: {e}")
     
     def run_interactive(self):
-        """Run capture with interactive menu."""
         clear()
         cprint("╔════════════════════════════════════════════════════════╗", CYAN)
         cprint("║           PACKET CAPTURE CONFIGURATION                 ║", CYAN)
